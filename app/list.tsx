@@ -5,7 +5,7 @@ const list = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View >
-                <Text>Listagem</Text>
+                <Text>Listagens</Text>
             </View>
         </SafeAreaView>
     );
