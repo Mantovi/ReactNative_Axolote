@@ -5,15 +5,18 @@ import { Text, View, StyleSheet, SafeAreaView, ImageBackground, TouchableOpacity
 
 
 const index = () => {
-    let [fontsLoaded] = useFonts({
+    const [fontsLoaded] = useFonts({
         'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
 
     })
 
+    if (!fontsLoaded) {
+        return <Text>Loading...</Text>
+    }
+
 
 
     return (
-
         <SafeAreaView style={styles.container}>
             <ImageBackground
                 source={require('../imagens/fundo.png')}
