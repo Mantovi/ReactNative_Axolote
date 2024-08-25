@@ -33,6 +33,12 @@ const index = () => {
                 >
                     <Text style={styles.textButton}>Start</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.startButton}
+                    onPress={() => router.push('/initialPage')}
+                >
+                    <Text style={styles.textButton}>InitialScreen</Text>
+                </TouchableOpacity>
             </ImageBackground>
         </SafeAreaView>
     );
