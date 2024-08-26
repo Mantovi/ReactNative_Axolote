@@ -36,7 +36,7 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-          name='AxolotList'
+          name='axolotList'
           options={{
             title: "Listagem de axolotes"
           }}

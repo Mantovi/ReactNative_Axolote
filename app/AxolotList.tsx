@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, FlatList, StyleSheet, Text, SafeAreaView, ImageBackground } from 'react-native';
+import { View, FlatList, StyleSheet, Text, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native';
 import AxolotlItem from './AxolotItem';
+import { router } from 'expo-router';
 
 const AxolotList: React.FC = () => {
     const axolots = [
@@ -39,7 +40,9 @@ const AxolotList: React.FC = () => {
                         keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
-
+                <TouchableOpacity onPress={() => router.push("/initialPage")}>
+                    <Text>Selecionar</Text>
+                </TouchableOpacity>
             </SafeAreaView>
         </ImageBackground>
     );
