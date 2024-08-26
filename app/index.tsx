@@ -20,7 +20,7 @@ const index = () => {
 
         <SafeAreaView style={styles.container}>
             <ImageBackground
-                source={require('../imagens/fundo.png')}
+                source={require('../imagens/imagemFundo.png')}
                 style={styles.backgroundImagem}
                 resizeMode="cover"
             >

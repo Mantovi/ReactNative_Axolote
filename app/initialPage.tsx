@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         alignItems: 'center',
-        paddingTop: 20,  
+        paddingTop: 20,
     },
     nameOutline: {
         width: "75%",
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         alignItems: 'center',
-        paddingTop: 20,  
+        paddingTop: 20,
     },
     buttonContainer: {
         flexDirection: 'row',
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     imageButton: {
         width: 60,
         height: 60,
-        resizeMode:"contain"
+        resizeMode: "contain"
     }
 });
 
@@ -91,23 +91,23 @@ const InitialPage = () => {
                 <View style={styles.buttonContainer}>
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => router.push("/list")}
+                        onPress={() => router.push("/AxolotList")}
                     >
-                        <Image style={styles.imageButton} source={require("../Icons/BasketMetal.png")}/>
+                        <Image style={styles.imageButton} source={require("../Icons/BasketMetal.png")} />
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => router.push("/list")}
+                        onPress={() => router.push("/AxolotList")}
                     >
-                        <Image style={styles.imageButton} source={require("../Icons/Moon.png")}/>
+                        <Image style={styles.imageButton} source={require("../Icons/Moon.png")} />
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         style={styles.button}
-                        onPress={() => router.push("/list")}
+                        onPress={() => router.push("/AxolotList")}
                     >
-                        <Image style={styles.imageButton} source={require("../Icons/GameControl.png")}/>
+                        <Image style={styles.imageButton} source={require("../Icons/GameControl.png")} />
                     </TouchableOpacity>
                 </View>
             </ImageBackground>
