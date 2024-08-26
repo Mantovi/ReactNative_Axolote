@@ -5,21 +5,25 @@ import { Text, View, StyleSheet, SafeAreaView, ImageBackground, TouchableOpacity
 
 
 const index = () => {
-    let [fontsLoaded] = useFonts({
+    const [fontsLoaded] = useFonts({
         'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
 
     })
 
+    if (!fontsLoaded) {
+        return <Text>Loading...</Text>
+    }
+
 
 
     return (
-        <ImageBackground
-            source={require('../imagens/imagemFundo.png')}
-            style={styles.backgroundImagem}
-            resizeMode="cover"
-        >
-            <SafeAreaView>
 
+        <SafeAreaView style={styles.container}>
+            <ImageBackground
+                source={require('../imagens/fundo.png')}
+                style={styles.backgroundImagem}
+                resizeMode="cover"
+            >
                 <View style={styles.textContainer}>
                     <Text style={styles.welcomeText}>Bem Vindo(a) ao</Text>
                     <Text style={styles.welcomeText}>Sr.(a) Axogotchi</Text>
@@ -30,8 +34,8 @@ const index = () => {
                 >
                     <Text style={styles.textButton}>Start</Text>
                 </TouchableOpacity>
-
-            </SafeAreaView></ImageBackground>
+            </ImageBackground>
+        </SafeAreaView>
     );
 }
 

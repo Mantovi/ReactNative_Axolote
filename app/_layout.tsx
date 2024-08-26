@@ -41,6 +41,12 @@ export default function RootLayout() {
             title: "Listagem de axolotes"
           }}
         />
+        <Stack.Screen
+          name='initialPage'
+          options={{
+            title: "Axolote"
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );
