@@ -13,25 +13,25 @@ const index = () => {
 
 
     return (
+        <ImageBackground
+            source={require('../imagens/imagemFundo.png')}
+            style={styles.backgroundImagem}
+            resizeMode="cover"
+        >
+            <SafeAreaView>
 
-        <SafeAreaView style={styles.container}>
-            <ImageBackground
-                source={require('../imagens/fundo.png')}
-                style={styles.backgroundImagem}
-                resizeMode="cover"
-            >
                 <View style={styles.textContainer}>
                     <Text style={styles.welcomeText}>Bem Vindo(a) ao</Text>
                     <Text style={styles.welcomeText}>Sr.(a) Axogotchi</Text>
                 </View>
                 <TouchableOpacity
                     style={styles.startButton}
-                    onPress={() => router.push('/list')}
+                    onPress={() => router.push('/AxolotList')}
                 >
                     <Text style={styles.textButton}>Start</Text>
                 </TouchableOpacity>
-            </ImageBackground>
-        </SafeAreaView>
+
+            </SafeAreaView></ImageBackground>
     );
 }
 
