@@ -47,6 +47,12 @@ export default function RootLayout() {
             title: "Axolote"
           }}
         />
+        <Stack.Screen
+          name='namePage'
+          options={{
+            title: "QualSeuNome"
+          }}
+        />
       </Stack>
     </ThemeProvider>
   );
