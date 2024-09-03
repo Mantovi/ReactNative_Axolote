@@ -16,14 +16,16 @@ const AxolotList: React.FC = () => {
     ];
 
     return (
-        <ImageBackground
-            source={require('../imagens/imagemFundo.png')}
-            style={styles.backgroundImagem}
-            resizeMode="cover"
-        >
-            <SafeAreaView >
-                <View style={styles.container}>
-                    <Text style={styles.header}>Selecione a raça do seu Axolote</Text>
+
+        <SafeAreaView style={styles.container}>
+            <ImageBackground
+                source={require('../imagens/imagemFundo.png')}
+                style={styles.backgroundImagem}
+                resizeMode="cover"
+            >
+                <View style={styles.textContainer}>
+                    <Text style={styles.header}>Selecione a raça </Text>
+                    <Text style={styles.header}>do seu axolote</Text>
                     <FlatList
                         data={axolots}
                         renderItem={({ item }) => (
@@ -39,24 +41,26 @@ const AxolotList: React.FC = () => {
                         keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
-
-            </SafeAreaView>
-        </ImageBackground>
+            </ImageBackground>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 10,
     },
     header: {
         color: '#c9c9c9',
         fontFamily: 'PressStart2P',
-        fontSize: 22,
+        fontSize: 20,
         textShadowColor: '#000',
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 1,
+        textAlign: 'center'
+    },
+    textContainer: {
+        marginTop: 50,
     },
     backgroundImagem: {
         flex: 1,

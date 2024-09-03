@@ -22,14 +22,26 @@ const AxolotItem: React.FC<AxolotItemProps> = ({ name, image, hunger, sleep, fun
                 <Image source={require('../imagens/Spritesheets/Axolotl_Albino_Dash.png')} style={styles.image} />
                 <View style={styles.info}>
                     <View style={styles.bars}>
-                        <View style={[styles.bar, { backgroundColor: 'red', width: `${hunger}%` }]} />
-                        <View style={[styles.bar, { backgroundColor: 'blue', width: `${sleep}%` }]} />
-                        <View style={[styles.bar, { backgroundColor: 'yellow', width: `${fun}%` }]} />
+                        <View style={styles.barContainer}>
+                            <View style={styles.barBackground}>
+                                <View style={[styles.bar, { backgroundColor: 'red', width: `${hunger}%` }]} />
+                            </View>
+                            <Text style={styles.textBar}>Hunger</Text>
+                        </View>
+                        <View style={styles.barContainer}>
+                            <View style={styles.barBackground}>
+                                <View style={[styles.bar, { backgroundColor: 'blue', width: `${sleep}%` }]} />
+                            </View>
+                            <Text style={styles.textBar}>Sleep</Text>
+                        </View>
+                        <View style={styles.barContainer}>
+                            <View style={styles.barBackground}>
+                                <View style={[styles.bar, { backgroundColor: 'yellow', width: `${fun}%` }]} />
+                            </View>
+                            <Text style={styles.textBar}>Fun</Text>
+                        </View>
                     </View>
                     <Text style={styles.name}>{name}</Text>
-                </View>
-                <View>
-
                 </View>
             </View>
         </TouchableOpacity>
@@ -43,18 +55,21 @@ const styles = StyleSheet.create({
         backgroundColor: "#f9ccaa",
         padding: 20,
         marginVertical: 10,
-        borderRadius: 20,
-        flexDirection: 'column',
+        borderRadius: 50,
+        flexDirection: 'row',
         alignItems: 'center',
+        borderColor: '#000',
+        borderWidth: 1,
     },
     content: {
-        flexDirection: 'column',
+        flexDirection: 'row',
         alignItems: 'center',
+        flex: 1
     },
     image: {
-        width: 60,
-        height: 60,
-        marginRight: 20,
+        width: 80,
+        height: 70,
+        marginRight: 50,
     },
     info: {
         flex: 1,
@@ -68,10 +83,30 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         marginVertical: 2,
     },
+    barBackground: {
+        width: 100, // Largura fixa para o fundo da barra
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: '#ddd', // Cor de fundo da barra
+        marginRight: 10,
+    },
     name: {
         fontSize: 18,
         fontFamily: 'PressStart2P',
         textAlign: 'center',
+        marginTop: 10,
+        width: '100%',
     },
-
+    textBar: {
+        width: 60,
+        fontSize: 10,
+        fontFamily: 'PressStart2P',
+        textAlign: 'left',
+        marginRight: 10,
+    },
+    barContainer: {
+        flexDirection: 'row', // Barra e texto lado a lado
+        alignItems: 'center',
+        marginBottom: 5,
+    },
 })
