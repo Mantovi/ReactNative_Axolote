@@ -76,17 +76,12 @@ const initialPage = () => {
   const [moonIcon, setMoonIcon] = useState(require("../Icons/Moon.png"));
   const [isGifPlayed, setIsGifPlayed] = useState(false); 
   const [pauseGif, setPauseGif] = useState(false)
-<<<<<<< HEAD
 
   // Função para alternar os elementos ao clicar no ícone 'Moon'
-  const toggleTheme = () => {
-    //setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
-    //setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
-=======
+  
   const toggleTheme = () => {
 //    setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
 //    setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
->>>>>>> fccde33eff594da2daaa5d468cf98f1a45fab856
 
     if (backgroundImage === require("../imagens/Fundo2.png")) {
         setBackgroundImage(require("../imagens/Fundo3.png"));
@@ -107,11 +102,8 @@ const initialPage = () => {
     } else {
       setGif(require("../assets/gifs/albinoFloating.gif"));
       setMoonIcon(require("../Icons/Moon.png"));
-<<<<<<< HEAD
       setIsGifPlayed(false); // Resetar o controle de reprodução do GIFo
-=======
       setIsGifPlayed(false); 
->>>>>>> fccde33eff594da2daaa5d468cf98f1a45fab856
       setPauseGif(false)
     }
   };
@@ -185,4 +177,5 @@ const initialPage = () => {
   );
 }
 
-export default initialPage;
+
+export default initialPage
