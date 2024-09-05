@@ -70,18 +70,23 @@ const initialPage = () => {
     'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
   });
 
-  // Estados para armazenar a imagem de fundo, GIF, ícone e controle de exibição do GIF
   const [backgroundImage, setBackgroundImage] = useState(require("../imagens/Fundo2.png"));
   const [nameOutline, setNameOutline] = useState(require("../Icons/nameOutline.png"))
   const [gif, setGif] = useState(require("../assets/gifs/albinoFloating.gif"));
   const [moonIcon, setMoonIcon] = useState(require("../Icons/Moon.png"));
-  const [isGifPlayed, setIsGifPlayed] = useState(false); // Estado para controlar se o GIF deve ser reproduzido
+  const [isGifPlayed, setIsGifPlayed] = useState(false); 
   const [pauseGif, setPauseGif] = useState(false)
+<<<<<<< HEAD
 
   // Função para alternar os elementos ao clicar no ícone 'Moon'
   const toggleTheme = () => {
     //setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
     //setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
+=======
+  const toggleTheme = () => {
+//    setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
+//    setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
+>>>>>>> fccde33eff594da2daaa5d468cf98f1a45fab856
 
     if (backgroundImage === require("../imagens/Fundo2.png")) {
         setBackgroundImage(require("../imagens/Fundo3.png"));
@@ -89,7 +94,6 @@ const initialPage = () => {
         setBackgroundImage(require("../imagens/Fundo2.png"));
     }
 
-    // Trocar a outline do nome com base no estado atual
     if (nameOutline === require("../Icons/nameOutline.png")) {
         setNameOutline(require("../Icons/darkNameOutline.png"));
     } else {
@@ -97,15 +101,17 @@ const initialPage = () => {
     }
 
     if (moonIcon === require("../Icons/Moon.png")) {
-      // Quando o ícone de "Moon" mudar para "Sun", o GIF albinoSleeping é exibido e executado
       setGif(require("../assets/gifs/albinoSleeping.gif"));
-      setIsGifPlayed(true); // Marcar que o GIF está sendo reproduzido
+      setIsGifPlayed(true); 
       setMoonIcon(require("../Icons/Sun.png"));
     } else {
-      // Quando o ícone de "Sun" mudar para "Moon", retornar ao GIF original
       setGif(require("../assets/gifs/albinoFloating.gif"));
       setMoonIcon(require("../Icons/Moon.png"));
+<<<<<<< HEAD
       setIsGifPlayed(false); // Resetar o controle de reprodução do GIFo
+=======
+      setIsGifPlayed(false); 
+>>>>>>> fccde33eff594da2daaa5d468cf98f1a45fab856
       setPauseGif(false)
     }
   };
@@ -132,9 +138,8 @@ const initialPage = () => {
                   resizeMode="cover"
                   onLoad={() => {
                     if (gif === require("../assets/gifs/albinoSleeping.gif") && isGifPlayed) {
-                      // Definir um tempo de execução para o GIF (por exemplo, 3 segundos) e travar no último frame após isso
                       setTimeout(() => {
-                        setIsGifPlayed(false); // Marcar como não executando mais o GIF
+                        setIsGifPlayed(false); 
                           setPauseGif(true)
                       }, 3000);
                     }
