@@ -42,9 +42,15 @@ const AxolotList: React.FC = () => {
                         keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
-
+                <View>
+                    <TouchableOpacity>
+                        <Text style={styles.button}
+                        onPress={() => router.push('/initialPage')}
+                        >Select</Text>
+                    </TouchableOpacity>
+                </View>
+            </ImageBackground>
         </SafeAreaView>
-        </ImageBackground >
     );
 };
 
@@ -69,6 +75,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    button: {
+        alignItems: "center",
+        justifyContent: "center"
+    }
 });
 
 export default AxolotList;
