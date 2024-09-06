@@ -42,9 +42,9 @@ const AxolotList: React.FC = () => {
                         keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
-
+            </ImageBackground >
         </SafeAreaView>
-        </ImageBackground >
+        
     );
 };
 
