@@ -42,10 +42,10 @@ const AxolotList: React.FC = () => {
                         keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
-                <View>
+                <View style={styles.containerButton}>
                     <TouchableOpacity>
-                        <Text style={styles.button}
-                        onPress={() => router.push('/initialPage')}
+                        <Text style={styles.buttonSelect}
+                        onPress={() => router.push('/namePage')}
                         >Select</Text>
                     </TouchableOpacity>
                 </View>
@@ -75,9 +75,17 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    button: {
-        alignItems: "center",
-        justifyContent: "center"
+    buttonSelect: {
+        color: '#fff',
+        fontSize: 48,
+        backgroundColor: '#000',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+    },
+    containerButton: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 
