@@ -165,12 +165,12 @@ const initialPage = () => {
             <Image style={styles.imageButton} source={moonIcon} />
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/*<TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/AxolotList")}
+            onPress={() => router.push("/NativeGame")}
           >
             <Image style={styles.imageButton} source={require("../Icons/GameControl.png")} />
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
         </View>
       </ImageBackground>
     </SafeAreaView>

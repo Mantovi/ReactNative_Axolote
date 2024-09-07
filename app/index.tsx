@@ -17,7 +17,6 @@ const index = () => {
 
 
     return (
-
         <SafeAreaView style={styles.container}>
             <ImageBackground
                 source={require('../imagens/imagemFundo.png')}

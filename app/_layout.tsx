@@ -35,6 +35,12 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
+        name='AxolotListColor'
+        options={{
+          title: "Listagem de cores dos Axolotes"
+        }}
+        />
+        <Stack.Screen
           name='AxolotList'
           options={{
             title: "Listagem de axolotes"
@@ -58,6 +64,12 @@ export default function RootLayout() {
             title: "jogoDaMemoria"
           }}
         />
+        {/*<Stack.Screen
+          name='NativeGame'
+          options={{
+            title: "jogoNativo"
+          }}
+        />*/}
       </Stack>
     </ThemeProvider>
   );

@@ -11,9 +11,8 @@ interface AxolotItemProps {
 }
 
 const AxolotItem: React.FC<AxolotItemProps> = ({ name, image, hunger, sleep, fun, onPress }) => {
-    let [fontsLoaded] = useFonts({
+    const [fontsLoaded] = useFonts({
         'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
-
     })
 
     return (
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
     },
     textBar: {
         width: 60,
-        fontSize: 10,
+        fontSize: 8,
         fontFamily: 'PressStart2P',
         textAlign: 'left',
         marginRight: 10,
@@ -107,6 +106,6 @@ const styles = StyleSheet.create({
     barContainer: {
         flexDirection: 'row', // Barra e texto lado a lado
         alignItems: 'center',
-        marginBottom: 5,
-    },
+        marginBottom: 5,
+    },
 })
