@@ -36,17 +36,10 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-<<<<<<< HEAD
           name='AxolotListCor'
           options={{
             title: "Listagem das cores dos axolotes"
           }}
-=======
-        name='AxolotListColor'
-        options={{
-          title: "Listagem de cores dos Axolotes"
-        }}
->>>>>>> 39d1ffaa9062cc5f800948d5190887ded003496b
         />
         <Stack.Screen
           name='AxolotList'
@@ -60,24 +53,6 @@ export default function RootLayout() {
             title: "Axolote"
           }}
         />
-        <Stack.Screen
-          name='namePage'
-          options={{
-            title: "QualSeuNome"
-          }}
-        />
-        <Stack.Screen
-          name='MemoryGame'
-          options={{
-            title: "jogoDaMemoria"
-          }}
-        />
-        {/*<Stack.Screen
-          name='NativeGame'
-          options={{
-            title: "jogoNativo"
-          }}
-        />*/}
       </Stack>
     </ThemeProvider>
   );
