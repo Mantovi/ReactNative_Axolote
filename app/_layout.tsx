@@ -64,12 +64,12 @@ export default function RootLayout() {
             title: "jogoDaMemoria"
           }}
         />
-        {/*<Stack.Screen
-          name='NativeGame'
+        <Stack.Screen
+          name='nativeGame'
           options={{
             title: "jogoNativo"
           }}
-        />*/}
+        />
       </Stack>
     </ThemeProvider>
   );
