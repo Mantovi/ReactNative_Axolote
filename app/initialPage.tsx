@@ -74,36 +74,36 @@ const initialPage = () => {
   const [nameOutline, setNameOutline] = useState(require("../Icons/nameOutline.png"))
   const [gif, setGif] = useState(require("../assets/gifs/albinoFloating.gif"));
   const [moonIcon, setMoonIcon] = useState(require("../Icons/Moon.png"));
-  const [isGifPlayed, setIsGifPlayed] = useState(false); 
+  const [isGifPlayed, setIsGifPlayed] = useState(false);
   const [pauseGif, setPauseGif] = useState(false)
 
   // Função para alternar os elementos ao clicar no ícone 'Moon'
-  
+
   const toggleTheme = () => {
-//    setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
-//    setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
+    //    setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
+    //    setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
 
     if (backgroundImage === require("../imagens/Fundo2.png")) {
-        setBackgroundImage(require("../imagens/Fundo3.png"));
+      setBackgroundImage(require("../imagens/Fundo3.png"));
     } else {
-        setBackgroundImage(require("../imagens/Fundo2.png"));
+      setBackgroundImage(require("../imagens/Fundo2.png"));
     }
 
     if (nameOutline === require("../Icons/nameOutline.png")) {
-        setNameOutline(require("../Icons/darkNameOutline.png"));
+      setNameOutline(require("../Icons/darkNameOutline.png"));
     } else {
-        setNameOutline(require("../Icons/nameOutline.png"));
+      setNameOutline(require("../Icons/nameOutline.png"));
     }
 
     if (moonIcon === require("../Icons/Moon.png")) {
       setGif(require("../assets/gifs/albinoSleeping.gif"));
-      setIsGifPlayed(true); 
+      setIsGifPlayed(true);
       setMoonIcon(require("../Icons/Sun.png"));
     } else {
       setGif(require("../assets/gifs/albinoFloating.gif"));
       setMoonIcon(require("../Icons/Moon.png"));
       setIsGifPlayed(false); // Resetar o controle de reprodução do GIFo
-      setIsGifPlayed(false); 
+      setIsGifPlayed(false);
       setPauseGif(false)
     }
   };
@@ -124,31 +124,31 @@ const initialPage = () => {
           </Text>
         </View>
         <View style={styles.gifContainer}>
-            {isGifPlayed ? (
-                <Image
-                  source={gif}
-                  resizeMode="cover"
-                  onLoad={() => {
-                    if (gif === require("../assets/gifs/albinoSleeping.gif") && isGifPlayed) {
-                      setTimeout(() => {
-                        setIsGifPlayed(false); 
-                          setPauseGif(true)
-                      }, 3000);
-                    }
-                  }}
-                />
-              ) : pauseGif ? (
-                <Image
-                source={require("../imagens/lastFrameForPause.png")}
-                resizeMode='cover'
-                />
-              ) : (
-                <Image
-                source={require("../assets/gifs/albinoFloating.gif")}
-                resizeMode='cover'
-                />
-              )
-            }
+          {isGifPlayed ? (
+            <Image
+              source={gif}
+              resizeMode="cover"
+              onLoad={() => {
+                if (gif === require("../assets/gifs/albinoSleeping.gif") && isGifPlayed) {
+                  setTimeout(() => {
+                    setIsGifPlayed(false);
+                    setPauseGif(true)
+                  }, 3000);
+                }
+              }}
+            />
+          ) : pauseGif ? (
+            <Image
+              source={require("../imagens/lastFrameForPause.png")}
+              resizeMode='cover'
+            />
+          ) : (
+            <Image
+              source={require("../assets/gifs/albinoFloating.gif")}
+              resizeMode='cover'
+            />
+          )
+          }
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
