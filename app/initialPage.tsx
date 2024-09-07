@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const InitialPage = () => {
+const initialPage = () => {
   const [fontsLoaded] = useFonts({
     'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
   });
@@ -76,6 +76,9 @@ const InitialPage = () => {
   const [moonIcon, setMoonIcon] = useState(require("../Icons/Moon.png"));
   const [isGifPlayed, setIsGifPlayed] = useState(false); 
   const [pauseGif, setPauseGif] = useState(false)
+
+  // Função para alternar os elementos ao clicar no ícone 'Moon'
+  
   const toggleTheme = () => {
 //    setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
 //    setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
@@ -99,6 +102,7 @@ const InitialPage = () => {
     } else {
       setGif(require("../assets/gifs/albinoFloating.gif"));
       setMoonIcon(require("../Icons/Moon.png"));
+      setIsGifPlayed(false); // Resetar o controle de reprodução do GIFo
       setIsGifPlayed(false); 
       setPauseGif(false)
     }
@@ -173,4 +177,5 @@ const InitialPage = () => {
   );
 }
 
-export default InitialPage;
+
+export default initialPage

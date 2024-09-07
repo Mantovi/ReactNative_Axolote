@@ -42,9 +42,9 @@ const AxolotList: React.FC = () => {
                         keyExtractor={(item) => item.id.toString()}
                     />
                 </View>
-            </ImageBackground >
+
+        </ImageBackground >
         </SafeAreaView>
-        
     );
 };
 
@@ -69,6 +69,18 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
+    buttonSelect: {
+        color: '#fff',
+        fontSize: 48,
+        backgroundColor: '#000',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+    },
+    containerButton: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    }
 });
 
 export default AxolotList;
