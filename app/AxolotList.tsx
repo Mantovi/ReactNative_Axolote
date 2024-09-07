@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, FlatList, StyleSheet, Text, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native';
 import AxolotlItem from './AxolotItem';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 
 const AxolotList: React.FC = () => {
+    const router = useRouter();
     const axolots = [
         {
             id: 1,
@@ -12,9 +13,27 @@ const AxolotList: React.FC = () => {
             hunger: 80,
             sleep: 60,
             fun: 90,
-        },
-        // Adicione mais axolots aqui...
+        }, {
+            id: 2,
+            name: 'Albino2',
+            image: require('../imagens/Spritesheets/Axolotl_Albino_Dash.png'),
+            hunger: 80,
+            sleep: 60,
+            fun: 90,
+        }, {
+            id: 3,
+            name: 'Albino3',
+            image: require('../imagens/Spritesheets/Axolotl_Albino_Dash.png'),
+            hunger: 80,
+            sleep: 60,
+            fun: 90,
+        }
     ];
+
+    const handlePress = (name: string) => {
+        console.log(`Selecionado ${name}`);
+        router.push('/initialPage'); // Navega para a página inicial
+    };
 
     return (
 
@@ -25,8 +44,11 @@ const AxolotList: React.FC = () => {
                 resizeMode="cover"
             >
                 <View style={styles.textContainer}>
-                    <Text style={styles.header}>Selecione a raça </Text>
-                    <Text style={styles.header}>do seu axolote</Text>
+                    <Text style={styles.header}>Selecione o</Text>
+                    <Text style={styles.header}>seu axolote</Text>
+
+                </View>
+                <View style={styles.itemComponent}>
                     <FlatList
                         data={axolots}
                         renderItem={({ item }) => (
@@ -36,11 +58,12 @@ const AxolotList: React.FC = () => {
                                 hunger={item.hunger}
                                 sleep={item.sleep}
                                 fun={item.fun}
-                                onPress={() => console.log(`Selecionado ${item.name}`)}
+                                onPress={() => handlePress(item.name)}
                             />
                         )}
                         keyExtractor={(item) => item.id.toString()}
                     />
+
                 </View>
             </ImageBackground >
         </SafeAreaView>
@@ -62,13 +85,23 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     textContainer: {
-        marginTop: 50,
+        flex: 1,
+        marginTop: 30,
+        alignItems: 'center',
     },
     backgroundImagem: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
+    itemComponent: {
+        flexDirection: 'row',
+        padding: 16,
+        marginBottom: 16,
+        borderRadius: 20,
+        alignItems: "center",
+        alignContent: "center"
+    }
 });
 
 export default AxolotList;

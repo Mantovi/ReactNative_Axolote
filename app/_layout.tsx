@@ -12,7 +12,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
   });
 
   useEffect(() => {
@@ -35,6 +35,12 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
+        name='AxolotListColor'
+        options={{
+          title: "Listagem de cores dos Axolotes"
+        }}
+        />
+        <Stack.Screen
           name='AxolotList'
           options={{
             title: "Listagem de axolotes"
@@ -46,6 +52,24 @@ export default function RootLayout() {
             title: "Axolote"
           }}
         />
+        <Stack.Screen
+          name='namePage'
+          options={{
+            title: "QualSeuNome"
+          }}
+        />
+        <Stack.Screen
+          name='MemoryGame'
+          options={{
+            title: "jogoDaMemoria"
+          }}
+        />
+        {/*<Stack.Screen
+          name='NativeGame'
+          options={{
+            title: "jogoNativo"
+          }}
+        />*/}
       </Stack>
     </ThemeProvider>
   );
