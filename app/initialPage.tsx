@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ImageBackground, SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { ImageBackground, SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Pressable } from 'react-native';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
 
@@ -62,6 +62,33 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     resizeMode: "contain"
+  },
+  gameMenu: {
+    position: 'absolute',
+    bottom: 110,
+    right: 15,
+    backgroundColor: '#F6E5D7',
+    borderRadius: 10,
+    padding: 10,
+    elevation: 5,
+  },
+  foodMenu: {
+    position: 'absolute',
+    bottom: 110,
+    left: 15,
+    backgroundColor: '#F6E5D7',
+    borderRadius: 10,
+    padding: 10,
+    elevation: 5,
+  },
+  menuItem: {
+    padding: 10,
+    alignItems: 'center',
+  },
+  menuText: {
+    fontSize: 16,
+    fontFamily: 'PressStart2P',
+    padding: 5
   }
 });
 
@@ -74,37 +101,41 @@ const initialPage = () => {
   const [nameOutline, setNameOutline] = useState(require("../Icons/nameOutline.png"))
   const [gif, setGif] = useState(require("../assets/gifs/albinoFloating.gif"));
   const [moonIcon, setMoonIcon] = useState(require("../Icons/Moon.png"));
-  const [isGifPlayed, setIsGifPlayed] = useState(false); 
-  const [pauseGif, setPauseGif] = useState(false)
+  const [isGifPlayed, setIsGifPlayed] = useState(false);
+  const [pauseGif, setPauseGif] = useState(false);
+  const [openGameMenu, setOpenGameMenu] = useState(false);
+  const [openFoodMenu, setOpenFoodMenu] = useState(false);
+
+  const toggleGameMenu = () => {
+    setOpenGameMenu(!openGameMenu);
+  };
+  const toggleFoodMenu = () => {
+    setOpenFoodMenu(!openFoodMenu);
+  };
 
   // Função para alternar os elementos ao clicar no ícone 'Moon'
-  
   const toggleTheme = () => {
-//    setBackgroundImage(prev => prev === require("../imagens/Fundo2.png") ? require("../imagens/Fundo3.png") : require("../imagens/Fundo2.png"));
-//    setNameOutline(prev => prev === require("../Icons/nameOutline.png") ? require("../Icons/darkNameOutline.png") : require("../Icons/nameOutline.png"))
-
     if (backgroundImage === require("../imagens/Fundo2.png")) {
-        setBackgroundImage(require("../imagens/Fundo3.png"));
+      setBackgroundImage(require("../imagens/Fundo3.png"));
     } else {
-        setBackgroundImage(require("../imagens/Fundo2.png"));
+      setBackgroundImage(require("../imagens/Fundo2.png"));
     }
 
     if (nameOutline === require("../Icons/nameOutline.png")) {
-        setNameOutline(require("../Icons/darkNameOutline.png"));
+      setNameOutline(require("../Icons/darkNameOutline.png"));
     } else {
-        setNameOutline(require("../Icons/nameOutline.png"));
+      setNameOutline(require("../Icons/nameOutline.png"));
     }
 
     if (moonIcon === require("../Icons/Moon.png")) {
       setGif(require("../assets/gifs/albinoSleeping.gif"));
-      setIsGifPlayed(true); 
+      setIsGifPlayed(true);
       setMoonIcon(require("../Icons/Sun.png"));
     } else {
       setGif(require("../assets/gifs/albinoFloating.gif"));
       setMoonIcon(require("../Icons/Moon.png"));
-      setIsGifPlayed(false); // Resetar o controle de reprodução do GIFo
-      setIsGifPlayed(false); 
-      setPauseGif(false)
+      setIsGifPlayed(false);
+      setPauseGif(false);
     }
   };
 
@@ -124,39 +155,50 @@ const initialPage = () => {
           </Text>
         </View>
         <View style={styles.gifContainer}>
-            {isGifPlayed ? (
-                <Image
-                  source={gif}
-                  resizeMode="cover"
-                  onLoad={() => {
-                    if (gif === require("../assets/gifs/albinoSleeping.gif") && isGifPlayed) {
-                      setTimeout(() => {
-                        setIsGifPlayed(false); 
-                          setPauseGif(true)
-                      }, 3000);
-                    }
-                  }}
-                />
-              ) : pauseGif ? (
-                <Image
-                source={require("../imagens/lastFrameForPause.png")}
-                resizeMode='cover'
-                />
-              ) : (
-                <Image
-                source={require("../assets/gifs/albinoFloating.gif")}
-                resizeMode='cover'
-                />
-              )
-            }
+          {isGifPlayed ? (
+            <Image
+              source={gif}
+              resizeMode="cover"
+              onLoad={() => {
+                if (gif === require("../assets/gifs/albinoSleeping.gif") && isGifPlayed) {
+                  setTimeout(() => {
+                    setIsGifPlayed(false);
+                    setPauseGif(true);
+                  }, 3000);
+                }
+              }}
+            />
+          ) : pauseGif ? (
+            <Image
+              source={require("../imagens/lastFrameForPause.png")}
+              resizeMode='cover'
+            />
+          ) : (
+            <Image
+              source={require("../assets/gifs/albinoFloating.gif")}
+              resizeMode='cover'
+            />
+          )}
         </View>
         <View style={styles.buttonContainer}>
+          {/*Butão de comer*/}
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/AxolotList")}
+            onPress={toggleFoodMenu}
           >
             <Image style={styles.imageButton} source={require("../Icons/BasketMetal.png")} />
           </TouchableOpacity>
+
+          {/*menu de comidinha */}
+          {openFoodMenu &&(
+            <View style={styles.foodMenu}>
+              <Pressable
+              style={styles.menuItem}
+              onPress={() => router.push}>
+                <Text style={styles.menuText}>Comida</Text>
+              </Pressable>
+            </View>
+          )}
 
           <TouchableOpacity
             style={styles.button}
@@ -165,17 +207,35 @@ const initialPage = () => {
             <Image style={styles.imageButton} source={moonIcon} />
           </TouchableOpacity>
 
+          {/* Butão dos games */}
           <TouchableOpacity
             style={styles.button}
-            onPress={() => router.push("/nativeGame")}
+            onPress={toggleGameMenu}
           >
             <Image style={styles.imageButton} source={require("../Icons/GameControl.png")} />
           </TouchableOpacity>
+
+          {/* Menu de joguinho*/}
+          {openGameMenu && (
+            <View style={styles.gameMenu}>
+              <Pressable
+                style={styles.menuItem}
+                onPress={() => router.push("/nativeGame")}
+              >
+                <Text style={styles.menuText}>Game 1</Text>
+              </Pressable>
+              <Pressable
+                style={styles.menuItem}
+                onPress={() => router.push("/MemoryGame")}
+              >
+                <Text style={styles.menuText}>Game 2</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
       </ImageBackground>
     </SafeAreaView>
   );
 }
 
-
-export default initialPage
+export default initialPage;

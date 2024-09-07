@@ -25,6 +25,7 @@ export default function RootLayout() {
     return null;
   }
 
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
@@ -35,10 +36,10 @@ export default function RootLayout() {
           }}
         />
         <Stack.Screen
-        name='AxolotListColor'
-        options={{
-          title: "Listagem de cores dos Axolotes"
-        }}
+          name='AxolotListCor'
+          options={{
+            title: "Listagem das cores dos axolotes"
+          }}
         />
         <Stack.Screen
           name='AxolotList'

@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, SafeAreaView, ImageBackground, TouchableOpacity
 
 
 
-const index = () => {
+const AxolotCreate = () => {
     const [fontsLoaded] = useFonts({
         'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
 
@@ -17,28 +17,33 @@ const index = () => {
 
 
     return (
+
         <SafeAreaView style={styles.container}>
             <ImageBackground
                 source={require('../imagens/imagemFundo.png')}
                 style={styles.backgroundImagem}
                 resizeMode="cover"
             >
-                <View style={styles.textContainer}>
-                    <Text style={styles.welcomeText}>Bem Vindo(a) ao</Text>
-                    <Text style={styles.welcomeText}>Sr.(a) Axogotchi</Text>
+                <View style={styles.buttons}>
+                    <TouchableOpacity
+                        style={styles.startButton}
+                        onPress={() => router.push('/AxolotListCor')}
+                    >
+                        <Text style={styles.textButton}>Criar novo Axogotchi</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.startButton}
+                        onPress={() => router.push('/AxolotList')}
+                    >
+                        <Text style={styles.textButton}>Meus Axogotchis</Text>
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                    style={styles.startButton}
-                    onPress={() => router.push('/AxolotCreate')}
-                >
-                    <Text style={styles.textButton}>Start</Text>
-                </TouchableOpacity>
             </ImageBackground>
         </SafeAreaView>
     );
 }
 
-export default index;
+export default AxolotCreate;
 
 const styles = StyleSheet.create({
     container: {
@@ -64,8 +69,8 @@ const styles = StyleSheet.create({
     },
     startButton: {
         backgroundColor: '#F5C7A9',
-        paddingHorizontal: 40,
-        paddingVertical: 10,
+        paddingHorizontal: 30,
+        paddingVertical: 20,
         borderRadius: 30,
         borderColor: '#000',
         borderWidth: 2,
@@ -73,10 +78,14 @@ const styles = StyleSheet.create({
     },
     textButton: {
         color: '#c9c9c9',
-        fontSize: 24,
+        fontSize: 16,
         fontFamily: 'PressStart2P',
         textShadowColor: '#000',
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 1,
+        textAlign: 'center',
+    },
+    buttons: {
+        gap: 10
     }
 })

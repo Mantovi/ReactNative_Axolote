@@ -106,6 +106,6 @@ const styles = StyleSheet.create({
     barContainer: {
         flexDirection: 'row', // Barra e texto lado a lado
         alignItems: 'center',
-        marginBottom: 5,
-    },
+        marginBottom: 5,
+    },
 })
