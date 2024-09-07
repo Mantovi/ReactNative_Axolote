@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     },
     textBar: {
         width: 60,
-        fontSize: 10,
+        fontSize: 8,
         fontFamily: 'PressStart2P',
         textAlign: 'left',
         marginRight: 10,

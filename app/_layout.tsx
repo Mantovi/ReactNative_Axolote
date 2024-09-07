@@ -12,7 +12,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
   });
 
   useEffect(() => {
@@ -25,6 +25,7 @@ export default function RootLayout() {
     return null;
   }
 
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack screenOptions={{ headerShown: false }}>
@@ -32,6 +33,12 @@ export default function RootLayout() {
           name="index"
           options={{
             title: "Seja bem vindo"
+          }}
+        />
+        <Stack.Screen
+          name='AxolotListCor'
+          options={{
+            title: "Listagem das cores dos axolotes"
           }}
         />
         <Stack.Screen

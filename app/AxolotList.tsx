@@ -13,7 +13,6 @@ const AxolotList: React.FC = () => {
             sleep: 60,
             fun: 90,
         },
-        // Adicione mais axolots aqui...
     ];
 
     return (
@@ -25,8 +24,11 @@ const AxolotList: React.FC = () => {
                 resizeMode="cover"
             >
                 <View style={styles.textContainer}>
-                    <Text style={styles.header}>Selecione a raça </Text>
-                    <Text style={styles.header}>do seu axolote</Text>
+                    <Text style={styles.header}>Selecione o</Text>
+                    <Text style={styles.header}>seu axolote</Text>
+
+                </View>
+                <View style={styles.itemComponent}>
                     <FlatList
                         data={axolots}
                         renderItem={({ item }) => (
@@ -62,13 +64,21 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     textContainer: {
-        marginTop: 50,
+        flex: 1,
+        marginTop: 30,
+        alignItems: 'center',
     },
     backgroundImagem: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center'
     },
+    itemComponent: {
+        flexDirection: 'row-reverse',
+        padding: 16,
+        marginBottom: 16,
+        borderRadius: 20,
+    }
 });
 
 export default AxolotList;
