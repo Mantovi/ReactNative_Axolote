@@ -1,9 +1,10 @@
 import React from 'react';
 import { View, FlatList, StyleSheet, Text, SafeAreaView, ImageBackground, TouchableOpacity } from 'react-native';
 import AxolotlItem from './AxolotItem';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 
 const AxolotList: React.FC = () => {
+    const router = useRouter();
     const axolots = [
         {
             id: 1,
@@ -12,8 +13,27 @@ const AxolotList: React.FC = () => {
             hunger: 80,
             sleep: 60,
             fun: 90,
-        },
+        }, {
+            id: 2,
+            name: 'Albino2',
+            image: require('../imagens/Spritesheets/Axolotl_Albino_Dash.png'),
+            hunger: 80,
+            sleep: 60,
+            fun: 90,
+        }, {
+            id: 3,
+            name: 'Albino3',
+            image: require('../imagens/Spritesheets/Axolotl_Albino_Dash.png'),
+            hunger: 80,
+            sleep: 60,
+            fun: 90,
+        }
     ];
+
+    const handlePress = (name: string) => {
+        console.log(`Selecionado ${name}`);
+        router.push('/initialPage'); // Navega para a página inicial
+    };
 
     return (
 
@@ -38,11 +58,12 @@ const AxolotList: React.FC = () => {
                                 hunger={item.hunger}
                                 sleep={item.sleep}
                                 fun={item.fun}
-                                onPress={() => console.log(`Selecionado ${item.name}`)}
+                                onPress={() => handlePress(item.name)}
                             />
                         )}
                         keyExtractor={(item) => item.id.toString()}
                     />
+
                 </View>
             </ImageBackground >
         </SafeAreaView>
@@ -74,10 +95,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     itemComponent: {
-        flexDirection: 'row-reverse',
+        flexDirection: 'row',
         padding: 16,
         marginBottom: 16,
         borderRadius: 20,
+        alignItems: "center",
+        alignContent: "center"
     }
 });
 
