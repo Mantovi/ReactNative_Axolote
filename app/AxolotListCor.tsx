@@ -1,11 +1,22 @@
-import React from 'react';
-import { ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useState } from 'react';
+import { ImageBackground, SafeAreaView, StyleSheet, TouchableOpacity, Text } from "react-native";
 import AxolotCor from "../components/AxolotCor";
-import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import { validateColor } from '@/utils/validateColor';
 
 const AxolotListCor = () => {
+    const router = useRouter();
 
-
+    const handleColorSelect = async (color: string) => {
+        try {
+            const validatedColor = validateColor(color);
+            await AsyncStorage.setItem('axolotColor', validatedColor);
+            router.push('/AxolotName');
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -17,20 +28,20 @@ const AxolotListCor = () => {
                 <AxolotCor
                     name="Albino"
                     image={require('../imagens/Spritesheets/Axolotl_Albino_Dash.png')}
-                    onPress={() => router.push('/AxolotName')}
+                    onPress={() => handleColorSelect('Albino')}
                 />
                 <AxolotCor
-                    name="Avatar"
-                    image={require('../imagens/Spritesheets/Axolotl_Black_Dash.png')}
-                    onPress={() => router.push('/AxolotName')}
+                    name="Pimentinha"
+                    image={require('../imagens/Spritesheets/Axolotl_Red_Dash.png')}
+                    onPress={() => handleColorSelect('Pimentinha')}
                 />
                 <AxolotCor
-                    name="Urânio"
+                    name="Uranio"
                     image={require('../imagens/Spritesheets/Axolotl_Deep_Sea_Dash.png')}
-                    onPress={() => router.push('/AxolotName')}
+                    onPress={() => handleColorSelect('Uranio')}
                 />
                 <TouchableOpacity style={styles.button} onPress={() => router.back()}>
-                    <Text style={styles.buttonText}>voltar</Text>
+                    <Text style={styles.buttonText}>Voltar</Text>
                 </TouchableOpacity>
             </ImageBackground>
         </SafeAreaView>

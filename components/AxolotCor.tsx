@@ -9,19 +9,31 @@ interface AxolotlItemProps {
 
 const AxolotCor: React.FC<AxolotlItemProps> = ({ name, image, onPress }) => (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-        <Image source={image} style={styles.image} />
-        <Text style={styles.name}>{name}</Text>
+
+        <View>
+            <Image source={image} style={styles.image} />
+        </View>
+        <View>
+            <Text style={styles.name}>{name}</Text>
+        </View>
     </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: "#f9ccaa",
+        padding: 20,
+        marginVertical: 10,
+        borderRadius: 50,
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
-        marginBottom: 16,
-        backgroundColor: '#F7B3B3',
-        borderRadius: 20,
+        borderColor: '#000',
+        borderWidth: 1,
+    },
+    content: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        flex: 1
     },
     image: {
         width: 80,

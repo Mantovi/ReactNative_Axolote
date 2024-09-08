@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
         textShadowColor: '#000',
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 1,
-
     },
     startButton: {
         backgroundColor: '#F5C7A9',

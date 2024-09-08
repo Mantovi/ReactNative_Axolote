@@ -4,7 +4,7 @@ const nativeGame = () => {
     return (
         <SafeAreaView>
             <ImageBackground
-            source={require("../imagens/imagemFundo.png")}
+                source={require("../imagens/imagemFundo.png")}
             >
 
             </ImageBackground>

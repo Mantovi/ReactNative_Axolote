@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ImageBackground, SafeAreaView, StyleSheet, View, Text, Image, TouchableOpacity, Pressable } from 'react-native';
 import { useFonts } from 'expo-font';
 import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AxolotInitial from '@/components/AxolotInitial';
+import { validateColor } from '@/utils/validateColor';
 
 const styles = StyleSheet.create({
   container: {
@@ -105,6 +108,24 @@ const initialPage = () => {
   const [pauseGif, setPauseGif] = useState(false);
   const [openGameMenu, setOpenGameMenu] = useState(false);
   const [openFoodMenu, setOpenFoodMenu] = useState(false);
+  const [name, setName] = useState('');
+  const [color, setColor] = useState<"Albino" | "Pimentinha" | "Uranio" | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const storedColor = await AsyncStorage.getItem('axolotColor');
+      const storedName = await AsyncStorage.getItem('axolotName');
+      if (storedColor) {
+        try {
+          setColor(validateColor(storedColor));
+        } catch (error) {
+          console.error("Invalid color stored in AsyncStorage");
+        }
+      }
+      if (storedName) setName(storedName);
+    };
+    fetchData();
+  }, []);
 
   const toggleGameMenu = () => {
     setOpenGameMenu(!openGameMenu);
@@ -151,34 +172,11 @@ const initialPage = () => {
         </View>
         <View style={styles.nameAxolotlContainer}>
           <Text>
-            <Text style={styles.axolotlName}>Jackson</Text>
+            <Text style={styles.axolotlName}>{name}</Text>
           </Text>
         </View>
         <View style={styles.gifContainer}>
-          {isGifPlayed ? (
-            <Image
-              source={gif}
-              resizeMode="cover"
-              onLoad={() => {
-                if (gif === require("../assets/gifs/albinoSleeping.gif") && isGifPlayed) {
-                  setTimeout(() => {
-                    setIsGifPlayed(false);
-                    setPauseGif(true);
-                  }, 3000);
-                }
-              }}
-            />
-          ) : pauseGif ? (
-            <Image
-              source={require("../imagens/lastFrameForPause.png")}
-              resizeMode='cover'
-            />
-          ) : (
-            <Image
-              source={require("../assets/gifs/albinoFloating.gif")}
-              resizeMode='cover'
-            />
-          )}
+          {color && <AxolotInitial color={color} isSleeping={isGifPlayed} />}
         </View>
         <View style={styles.buttonContainer}>
           {/*Butão de comer*/}
@@ -190,11 +188,11 @@ const initialPage = () => {
           </TouchableOpacity>
 
           {/*menu de comidinha */}
-          {openFoodMenu &&(
+          {openFoodMenu && (
             <View style={styles.foodMenu}>
               <Pressable
-              style={styles.menuItem}
-              onPress={() => router.push}>
+                style={styles.menuItem}
+                onPress={() => router.push}>
                 <Text style={styles.menuText}>Comida</Text>
               </Pressable>
             </View>
@@ -220,7 +218,7 @@ const initialPage = () => {
             <View style={styles.gameMenu}>
               <Pressable
                 style={styles.menuItem}
-                onPress={() => router.push("/nativeGame")}
+                onPress={() => router.push('/nativeGame')}
               >
                 <Text style={styles.menuText}>Game 1</Text>
               </Pressable>
