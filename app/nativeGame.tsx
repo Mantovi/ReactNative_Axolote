@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, Button, Image } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 
@@ -18,9 +19,10 @@ const nativeGame: React.FC = () => {
   const [lives, setLives] = useState(3);
   const [isGameOver, setIsGameOver] = useState(false);
   const [obstacles, setObstacles] = useState<Obstacle[]>([]);
-  const [hasCollided, setHasCollided] = useState(false); // Previne múltiplas colisões
-  const [scorePoints, setScorePoints] = useState(0); // Pontos
-  const [obstacleSpeed, setObstacleSpeed] = useState(10); // Velocidade
+  const [hasCollided, setHasCollided] = useState(false);
+  const [scorePoints, setScorePoints] = useState(0);
+  const [obstacleSpeed, setObstacleSpeed] = useState(10);
+  const [playerColor, setPlayerColor] = useState<'Albino' | 'Pimentinha' | 'Uranio' | null>(null); // Cor do axolote
 
   // Array de imagens de obstáculos
   const obstacleImages = [
@@ -31,32 +33,44 @@ const nativeGame: React.FC = () => {
     require("../Icons/Thunder.png"),
   ];
 
-  const playerImage = [
-    
-  ]
+  // Array de imagens do jogador (axolotes)
+  const playerImages = {
+    Albino: require('../assets/gifs/albinoFloating.gif'),
+    Pimentinha: require('../assets/gifs/albinoFloating.gif'),
+    Uranio: require('../assets/gifs/albinoFloating.gif'),
+  };
 
   // Função para gerar obstáculos
   const generateObstacle = () => {
-    if (obstacles.length < 10) { 
+    if (obstacles.length < 10) {
       const obstacle: Obstacle = {
-        x: Math.random() * (width - 50), // Posição horizontal aleatória
-        y: -50, // Inicia fora da tela, no topo
+        x: Math.random() * (width - 50),
+        y: -50,
         width: 50,
         height: 50,
-        type: Math.floor(Math.random() * obstacleImages.length) // Escolhe uma imagem aleatória
+        type: Math.floor(Math.random() * obstacleImages.length)
       };
       setObstacles((prevObstacles) => [...prevObstacles, obstacle]);
     }
   };
 
   useEffect(() => {
+    // Recupera a cor do axolote selecionado
+    const fetchPlayerColor = async () => {
+      const storedColor = await AsyncStorage.getItem('axolotColor');
+      if (storedColor) {
+        setPlayerColor(storedColor as 'Albino' | 'Pimentinha' | 'Uranio');
+      }
+    };
+    fetchPlayerColor();
+
     // Inicia o giroscópio
     Gyroscope.setUpdateInterval(70);
     const subscription = Gyroscope.addListener((data) => {
       setGyroscopeData(data);
     });
 
-    // Gera um obstáculo a cada 4 segundos
+    // Gera um obstáculo a cada 2 segundos
     const obstacleInterval = setInterval(generateObstacle, 2000);
 
     return () => {
@@ -71,22 +85,19 @@ const nativeGame: React.FC = () => {
       const newX = position.x + gyroscopeData.y * 15;
       const newY = position.y + gyroscopeData.x * 15;
 
-      // Mantém o jogador dentro da tela
       setPosition({
         x: Math.max(0, Math.min(newX, width - 50)),
         y: Math.max(0, Math.min(newY, height - 150)),
       });
 
-      // Move os obstáculos para baixo
       setObstacles((prevObstacles) => {
         const updatedObstacles = prevObstacles
           .map((obstacle) => ({
             ...obstacle,
-            y: obstacle.y + obstacleSpeed, // Velocidade de queda
+            y: obstacle.y + obstacleSpeed,
           }))
-          .filter((obstacle) => obstacle.y < height); // Remove os obstáculos que saem da tela
+          .filter((obstacle) => obstacle.y < height);
 
-        // Atualiza pontos e velocidade
         if (updatedObstacles.length < prevObstacles.length) {
           setScorePoints((prevScorePoints) => {
             const newScorePoints = prevScorePoints + 10;
@@ -118,15 +129,15 @@ const nativeGame: React.FC = () => {
               collisionDetected = true;
               setLives((prevLives) => prevLives - 1);
             }
-            return acc; // Não adiciona o obstáculo à lista se houver colisão
+            return acc;
           }
-          acc.push(obstacle); // Adiciona o obstáculo se não houver colisão
+          acc.push(obstacle);
           return acc;
         }, []);
 
         if (collisionDetected) {
           setHasCollided(true);
-          setTimeout(() => setHasCollided(false), 50); // Impede múltiplas colisões rápidas
+          setTimeout(() => setHasCollided(false), 50);
         }
 
         if (lives <= 0 && !isGameOver) {
@@ -152,22 +163,28 @@ const nativeGame: React.FC = () => {
     <View style={styles.container}>
       {!isGameOver ? (
         <>
-          <View
-            style={[
-              styles.player,
-              { left: position.x, top: position.y },
-            ]}
-          />
+          {/* Mostrar a imagem do jogador com base na cor selecionada */}
+          {playerColor && (
+            <Image
+              source={playerImages[playerColor]}
+              style={[
+                styles.player,
+                { left: position.x, top: position.y },
+              ]}
+            />
+          )}
+
           {obstacles.map((obstacle, index) => (
             <Image
               key={index}
-              source={obstacleImages[obstacle.type]} // Seleciona a imagem com base no tipo
+              source={obstacleImages[obstacle.type]}
               style={[
                 styles.obstacle,
                 { left: obstacle.x, top: obstacle.y, width: obstacle.width, height: obstacle.height },
               ]}
             />
           ))}
+
           <Text style={styles.lives}>Vidas: {lives}</Text>
           <Text style={styles.scorePoints}>Pontos: {scorePoints}</Text>
         </>
@@ -191,7 +208,6 @@ const styles = StyleSheet.create({
   player: {
     width: 50,
     height: 50,
-    backgroundColor: 'blue',
     position: 'absolute',
   },
   obstacle: {
