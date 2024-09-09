@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Button } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Button, Image } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
 
 const { width, height } = Dimensions.get('window');
@@ -9,31 +9,45 @@ interface Obstacle {
   y: number;
   width: number;
   height: number;
+  type: number; // Adicionei o campo 'type' para selecionar a imagem
 }
 
 const nativeGame: React.FC = () => {
   const [position, setPosition] = useState({ x: width / 2, y: height - 100 });
   const [gyroscopeData, setGyroscopeData] = useState({ x: 0, y: 0, z: 0 });
-  const [lives, setLives] = useState(5);
+  const [lives, setLives] = useState(3);
   const [isGameOver, setIsGameOver] = useState(false);
   const [obstacles, setObstacles] = useState<Obstacle[]>([]);
   const [hasCollided, setHasCollided] = useState(false); // Previne múltiplas colisões
-  const [scorePoints, setScorePoints] = useState(0) //Pontos
-  const [obstacleSpeed, setObstacleSpeed] = useState(10); // Velociade
+  const [scorePoints, setScorePoints] = useState(0); // Pontos
+  const [obstacleSpeed, setObstacleSpeed] = useState(10); // Velocidade
 
+  // Array de imagens de obstáculos
+  const obstacleImages = [
+    require("../Icons/Bomb.png"),
+    require("../Icons/Sword.png"),
+    require("../Icons/Skull.png"),
+    require("../Icons/Mushroom.png"),
+    require("../Icons/Thunder.png"),
+  ];
+
+  const playerImage = [
+    
+  ]
 
   // Função para gerar obstáculos
   const generateObstacle = () => {
-    if (obstacles.length < 5) { // se tiver menos de 5 lixosos na tela ele continua executando, se tiver 5, ele espera um sumir para mandar o outro 
+    if (obstacles.length < 10) { 
       const obstacle: Obstacle = {
         x: Math.random() * (width - 50), // Posição horizontal aleatória
         y: -50, // Inicia fora da tela, no topo
         width: 50,
         height: 50,
+        type: Math.floor(Math.random() * obstacleImages.length) // Escolhe uma imagem aleatória
       };
       setObstacles((prevObstacles) => [...prevObstacles, obstacle]);
-    };
     }
+  };
 
   useEffect(() => {
     // Inicia o giroscópio
@@ -42,8 +56,8 @@ const nativeGame: React.FC = () => {
       setGyroscopeData(data);
     });
 
-    // Faz um lixoso a cada 3 segundos
-    const obstacleInterval = setInterval(generateObstacle, 4000);
+    // Gera um obstáculo a cada 4 segundos
+    const obstacleInterval = setInterval(generateObstacle, 2000);
 
     return () => {
       subscription.remove();
@@ -51,39 +65,38 @@ const nativeGame: React.FC = () => {
     };
   }, []);
 
-  // Atualiza a posição do axolote e movimenta os lixosos
-  //vertical = Y e horizintal = X
+  // Atualiza a posição do jogador e movimenta os obstáculos
   useEffect(() => {
     if (!isGameOver) {
       const newX = position.x + gyroscopeData.y * 15;
       const newY = position.y + gyroscopeData.x * 15;
 
-      // Serve para manter dentro da tela
+      // Mantém o jogador dentro da tela
       setPosition({
         x: Math.max(0, Math.min(newX, width - 50)),
-        y: Math.max(0, Math.min(newY, height - 50)),
+        y: Math.max(0, Math.min(newY, height - 150)),
       });
 
-      // Move os lixoso para baixo
+      // Move os obstáculos para baixo
       setObstacles((prevObstacles) => {
         const updatedObstacles = prevObstacles
-        .map((obstacle) => ({
-          ...obstacle,
-          y: obstacle.y + obstacleSpeed, // Velocidade de caida
-        }))
-        .filter((obstacle) => obstacle.y < height) // Remove os lixoso da tela
+          .map((obstacle) => ({
+            ...obstacle,
+            y: obstacle.y + obstacleSpeed, // Velocidade de queda
+          }))
+          .filter((obstacle) => obstacle.y < height); // Remove os obstáculos que saem da tela
 
-        //atualiza pts e velocidade
-        if (updatedObstacles.length < prevObstacles.length){
+        // Atualiza pontos e velocidade
+        if (updatedObstacles.length < prevObstacles.length) {
           setScorePoints((prevScorePoints) => {
-            const newScorePoints = prevScorePoints + 20;
+            const newScorePoints = prevScorePoints + 10;
             if (newScorePoints % 100 === 0) {
-              setObstacleSpeed((prevSpeed) => prevSpeed * 1.5)
+              setObstacleSpeed((prevSpeed) => prevSpeed * 1.2);
             }
-            return newScorePoints
-          })
+            return newScorePoints;
+          });
         }
-        return updatedObstacles
+        return updatedObstacles;
       });
     }
   }, [gyroscopeData, isGameOver]);
@@ -91,7 +104,6 @@ const nativeGame: React.FC = () => {
   // Verificar colisões e vidas
   useEffect(() => {
     if (!isGameOver) {
-      // Verificar colisões e atualiza os lixosos
       setObstacles((prevObstacles) => {
         let collisionDetected = false;
 
@@ -102,22 +114,22 @@ const nativeGame: React.FC = () => {
             position.y < obstacle.y + obstacle.height &&
             position.y + 50 > obstacle.y
           ) {
-            if (!hasCollided) {
+            if (!hasCollided && lives > 0) {
               collisionDetected = true;
               setLives((prevLives) => prevLives - 1);
             }
-            return acc; // Não adiciona o lixoso à lista se tiver colisão
+            return acc; // Não adiciona o obstáculo à lista se houver colisão
           }
-          acc.push(obstacle); // Adiciona o lixoso se não tiver colisão
+          acc.push(obstacle); // Adiciona o obstáculo se não houver colisão
           return acc;
         }, []);
 
         if (collisionDetected) {
           setHasCollided(true);
-          setTimeout(() => setHasCollided(false), 500); // Não deixa bater de novo se tiver muito rapido
+          setTimeout(() => setHasCollided(false), 50); // Impede múltiplas colisões rápidas
         }
 
-        if (lives <= 0) {
+        if (lives <= 0 && !isGameOver) {
           setIsGameOver(true);
         }
 
@@ -126,13 +138,14 @@ const nativeGame: React.FC = () => {
     }
   }, [position, hasCollided, isGameOver, lives]);
 
+  // Reiniciar o jogo
   const resetGame = () => {
-    setPosition({ x: width / 2, y: height - 100 })
-    setLives(5)
-    setObstacles([])
-    setIsGameOver(false)
-    setScorePoints(0)
-    setObstacleSpeed(6)
+    setPosition({ x: width / 2, y: height - 100 });
+    setLives(3);
+    setObstacles([]);
+    setIsGameOver(false);
+    setScorePoints(0);
+    setObstacleSpeed(6);
   };
 
   return (
@@ -146,8 +159,9 @@ const nativeGame: React.FC = () => {
             ]}
           />
           {obstacles.map((obstacle, index) => (
-            <View
+            <Image
               key={index}
+              source={obstacleImages[obstacle.type]} // Seleciona a imagem com base no tipo
               style={[
                 styles.obstacle,
                 { left: obstacle.x, top: obstacle.y, width: obstacle.width, height: obstacle.height },
@@ -156,7 +170,6 @@ const nativeGame: React.FC = () => {
           ))}
           <Text style={styles.lives}>Vidas: {lives}</Text>
           <Text style={styles.scorePoints}>Pontos: {scorePoints}</Text>
-          
         </>
       ) : (
         <View style={styles.gameOverContainer}>
@@ -183,7 +196,6 @@ const styles = StyleSheet.create({
   },
   obstacle: {
     position: 'absolute',
-    backgroundColor: 'red',
   },
   lives: {
     position: 'absolute',
