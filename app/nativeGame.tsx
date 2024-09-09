@@ -35,19 +35,19 @@ const nativeGame: React.FC = () => {
 
   // Array de imagens do jogador (axolotes)
   const playerImages = {
-    Albino: require('../assets/gifs/albinoFloating.gif'),
-    Pimentinha: require('../assets/gifs/albinoFloating.gif'),
-    Uranio: require('../assets/gifs/albinoFloating.gif'),
+    Albino: require('../assets/gifs/albinoSwimming.gif'),
+    Pimentinha: require('../assets/gifs/pimentinhaFloating.gif'),
+    Uranio: require('../assets/gifs/uranioFloating.gif'),
   };
 
   // Função para gerar obstáculos
   const generateObstacle = () => {
-    if (obstacles.length < 10) {
+    if (obstacles.length < 7) {
       const obstacle: Obstacle = {
         x: Math.random() * (width - 50),
         y: -50,
         width: 50,
-        height: 50,
+        height: 60,
         type: Math.floor(Math.random() * obstacleImages.length)
       };
       setObstacles((prevObstacles) => [...prevObstacles, obstacle]);
@@ -71,7 +71,7 @@ const nativeGame: React.FC = () => {
     });
 
     // Gera um obstáculo a cada 2 segundos
-    const obstacleInterval = setInterval(generateObstacle, 2000);
+    const obstacleInterval = setInterval(generateObstacle, 4000);
 
     return () => {
       subscription.remove();
@@ -114,40 +114,54 @@ const nativeGame: React.FC = () => {
 
   // Verificar colisões e vidas
   useEffect(() => {
-    if (!isGameOver) {
-      setObstacles((prevObstacles) => {
-        let collisionDetected = false;
+  if (!isGameOver) {
+    setObstacles((prevObstacles) => {
+      let collisionDetected = false;
 
-        const updatedObstacles = prevObstacles.reduce((acc: Obstacle[], obstacle) => {
-          if (
-            position.x < obstacle.x + obstacle.width &&
-            position.x + 50 > obstacle.x &&
-            position.y < obstacle.y + obstacle.height &&
-            position.y + 50 > obstacle.y
-          ) {
-            if (!hasCollided && lives > 0) {
-              collisionDetected = true;
-              setLives((prevLives) => prevLives - 1);
-            }
-            return acc;
+      // Verifica se o jogador colidiu com algum obstáculo
+      const updatedObstacles = prevObstacles.reduce((acc: Obstacle[], obstacle) => {
+        const playerLeft = position.x;
+        const playerRight = position.x + 100;
+        const playerTop = position.y;
+        const playerBottom = position.y + 100;
+
+        const obstacleLeft = obstacle.x;
+        const obstacleRight = obstacle.x + obstacle.width;
+        const obstacleTop = obstacle.y;
+        const obstacleBottom = obstacle.y + obstacle.height;
+
+        // Verifica a colisão usando as coordenadas do jogador e do obstáculo
+        const collision =
+          playerRight > obstacleLeft &&
+          playerLeft < obstacleRight &&
+          playerBottom > obstacleTop &&
+          playerTop < obstacleBottom;
+
+        if (collision) {
+          if (!hasCollided && lives > 0) {
+            collisionDetected = true;
+            setLives((prevLives) => prevLives - 1);
           }
-          acc.push(obstacle);
+          // Não adiciona o obstáculo à lista se colidiu
           return acc;
-        }, []);
-
-        if (collisionDetected) {
-          setHasCollided(true);
-          setTimeout(() => setHasCollided(false), 50);
         }
+        acc.push(obstacle);
+        return acc;
+      }, []);
 
-        if (lives <= 0 && !isGameOver) {
-          setIsGameOver(true);
-        }
+      if (collisionDetected) {
+        setHasCollided(true);
+        setTimeout(() => setHasCollided(false), 50);
+      }
 
-        return updatedObstacles;
-      });
-    }
-  }, [position, hasCollided, isGameOver, lives]);
+      if (lives <= 0 && !isGameOver) {
+        setIsGameOver(true);
+      }
+
+      return updatedObstacles;
+    });
+  }
+}, [position, hasCollided, isGameOver, lives]);
 
   // Reiniciar o jogo
   const resetGame = () => {
@@ -169,7 +183,7 @@ const nativeGame: React.FC = () => {
               source={playerImages[playerColor]}
               style={[
                 styles.player,
-                { left: position.x, top: position.y },
+                { left: position.x, top: position.y, width: 100, height: 100 / 2.42 },
               ]}
             />
           )}

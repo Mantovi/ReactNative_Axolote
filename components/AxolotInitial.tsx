@@ -11,6 +11,7 @@ const axolotlImages = {
         awake: require('../assets/gifs/albinoFloating.gif'),
         sleeping: require('../assets/gifs/albinoSleeping.gif'),
         sleepingStatic: require('../imagens/AlbinoSleepingStop.png'),
+        swimming : require("../assets/gifs/albinoSwimming.gif")
     },
     Pimentinha: {
         awake: require('../assets/gifs/pimentinhaFloating.gif'),
