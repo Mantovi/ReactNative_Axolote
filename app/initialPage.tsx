@@ -128,19 +128,19 @@ const InitialPage = () => {
   const toggleGameMenu = useCallback(() => {
     setOpenGameMenu(openGameMenu => !openGameMenu);
   }, []);
-  
+
   const toggleFoodMenu = useCallback(() => {
     setOpenFoodMenu(openFoodMenu => !openFoodMenu);
   }, []);
-  
+
   const toggleTheme = useCallback(() => {
-    setBackgroundImage(currentBackgroundImage => 
+    setBackgroundImage(currentBackgroundImage =>
       currentBackgroundImage === require("../imagens/Fundo2.png")
         ? require("../imagens/Fundo3.png")
         : require("../imagens/Fundo2.png")
     );
 
-    setNameOutline(currentNameOutline => 
+    setNameOutline(currentNameOutline =>
       currentNameOutline === require("../Icons/nameOutline.png")
         ? require("../Icons/darkNameOutline.png")
         : require("../Icons/nameOutline.png")
