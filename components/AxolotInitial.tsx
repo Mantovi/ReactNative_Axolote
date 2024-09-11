@@ -14,12 +14,12 @@ const axolotlImages = {
         swimming : require("../assets/gifs/albinoSwimming.gif")
     },
     Pimentinha: {
-        awake: require('../assets/gifs/pimentinhaFloating.gif'),
+        awake: require('../assets/gifs/PimentinhaFloating.gif'),
         sleeping: require('../assets/gifs/pimentinhaSleeping.gif'),
         sleepingStatic: require('../imagens/PimentinhaSleepingStop.png'),
     },
     Uranio: {
-        awake: require('../assets/gifs/uranioFloating.gif'),
+        awake: require('../assets/gifs/UranioFloating.gif'),
         sleeping: require('../assets/gifs/uranioSleeping.gif'),
         sleepingStatic: require('../imagens/UranioSleepingStop.png'),
     }
