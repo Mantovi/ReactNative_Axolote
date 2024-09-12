@@ -1,31 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { View, Image, TouchableOpacity, StyleSheet, Alert, SafeAreaView, ImageBackground } from 'react-native';
+import { View, Image, TouchableOpacity, StyleSheet, Alert, SafeAreaView, ImageBackground, ImageSourcePropType } from 'react-native';
 
-// Imagens
-const imageSources = [ //tem q mudar as imagens aqui depois
-  require('../Icons/BasketMetal.png'),
-  require('../Icons/Pizza.png'),
-  require('../Icons/OrangeJuice.png'),
-  require('../Icons/GameControl.png'),
+interface  CardType {
+  id: ImageSourcePropType
+  matched: boolean
+}
+
+const imageSources: ImageSourcePropType[] = [
+  require('../Icons/Potion.png'),
+  require('../Icons/Star.png'),
+  require('../Icons/Trophy.png'),
+  require('../Icons/Life.png'),
   require('../Icons/Sun.png'),
   require('../Icons/Moon.png'),
+  require('../Icons/Coin.png'),
 ];
 const backgroundImage = require('../imagens/imagemFundo.png');
 
 // Função para gerar os pares
-const generateCards = () => {
-  const cards = [];
+const generateCards = (): CardType[] => {
+  const cards: CardType[] = [];
   imageSources.forEach((source) => {
     cards.push({ id: source, matched: false });
     cards.push({ id: source, matched: false });
   });
-  return cards.sort(() => Math.random() - 0.5);
+  return cards.sort(() => Math.random() - 0.2);
 };
 
 export default function App() {
-  const [cards, setCards] = useState(generateCards());
-  const [flippedIndices, setFlippedIndices] = useState([]);
-  const [matchedPairs, setMatchedPairs] = useState(0);
+  const [cards, setCards] = useState<CardType[]>(generateCards());
+  const [flippedIndices, setFlippedIndices] = useState<number[]>([]);
+  const [matchedPairs, setMatchedPairs] = useState<number>(0);
 
   useEffect(() => {
     if (matchedPairs === imageSources.length) {
@@ -35,11 +40,10 @@ export default function App() {
     }
   }, [matchedPairs]);
 
-  const handleCardPress = (index) => {
-    if (flippedIndices.length === 2 || cards[index].matched) return;
-
-    const newFlippedIndices = [...flippedIndices, index];
-    setFlippedIndices(newFlippedIndices);
+  const handleCardPress = (index: number) : void => {
+    if (flippedIndices.includes(index) || cards[index].matched) return;
+      const newFlippedIndices = [...flippedIndices, index];
+      setFlippedIndices(newFlippedIndices);
 
     if (newFlippedIndices.length === 2) {
       const [firstIndex, secondIndex] = newFlippedIndices;
@@ -111,7 +115,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
   },
   image: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
   },
 });
