@@ -18,7 +18,7 @@ interface Obstacle {
 const nativeGame: React.FC = () => {
 
   let [fontsLoaded] = useFonts({
-    'PressStartP2': require('../assets/fonts/PressStart2P-Regular.ttf'),
+    'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
   });
 
   const backgroundImage = require("../imagens/NightScreenGame.png")
@@ -280,14 +280,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     fontSize: 24,
-    fontFamily: "PressStartP2",
+    fontFamily: "PressStart2P",
     color: "lightgreen"
   },
   scorePoints: {
     position: 'absolute',
     top: 80,
     fontSize: 24,
-    fontFamily: "PressStartP2",
+    fontFamily: "PressStart2P",
     color: "lightgreen"
   },
   gameOverContainer: {
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   gameOverText: {
     fontSize: 32,
     marginBottom: 20,
-    fontFamily: "PressStartP2",
+    fontFamily: "PressStart2P",
     color: "lightgreen"
   },
   pauseButtonPosition: {
