@@ -1,56 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View, ImageSourcePropType, ImageBackgroundProps, Text } from 'react-native';
+import { Axogotchis } from '@/mock/Axolotchis';
+import { Axogotchi } from '@/models/Axogotchi';
 
 interface AxolotInitialProps {
-    color: "Albino" | "Pimentinha" | "Uranio";
+    color: number;
     isSleeping: boolean;
 }
 
-const axolotlImages = {
-    Albino: {
-        awake: require('../assets/gifs/albinoFloating.gif'),
-        sleeping: require('../assets/gifs/albinoSleeping.gif'),
-        sleepingStatic: require('../imagens/AlbinoSleepingStop.png'),
-    },
-    Pimentinha: {
-        awake: require('../assets/gifs/pimentinhaFloating.gif'),
-        sleeping: require('../assets/gifs/pimentinhaSleeping.gif'),
-        sleepingStatic: require('../imagens/PimentinhaSleepingStop.png'),
-    },
-    Uranio: {
-        awake: require('../assets/gifs/uranioFloating.gif'),
-        sleeping: require('../assets/gifs/uranioSleeping.gif'),
-        sleepingStatic: require('../imagens/UranioSleepingStop.png'),
+// Função para obter o movimento do axolote com base na cor
+const getAxogotchiMovement = (color: number, isSleeping: boolean, showStaticImage: boolean): ImageSourcePropType => {
+    const movements = Axogotchis[color]; // Acessa diretamente o objeto com a cor como chave
+    if (!movements) {
+        // Caso o movimento não seja encontrado, retorna uma imagem padrão ou nula
+        return require("../imagens/Fundo2.png"); // Substitua com uma imagem padrão, se necessário
     }
-};
+
+    return isSleeping
+        ? (showStaticImage ? movements.sleepingStatic : movements.sleeping)
+        : movements.awake;
+}
 
 const AxolotInitial: React.FC<AxolotInitialProps> = ({ color, isSleeping }) => {
     const [showStaticImage, setShowStaticImage] = useState(false);
+    const [axogotchi, setAxogotchi] = useState<Axogotchi>();
+    const [image, setImage] = useState<ImageBackgroundProps>(Axogotchis[axogotchi?.color ?? 0].awake)
 
     useEffect(() => {
         if (isSleeping) {
-            // Temporizador baseado na duração estimada do GIF (ajuste conforme necessário)
-            const gifDuration = 2300; // Exemplo: 5 segundos, ajuste para a duração real do GIF
+            const gifDuration = 2300;
             const timer = setTimeout(() => {
                 setShowStaticImage(true);
             }, gifDuration);
 
-            // Limpar o temporizador se o componente desmontar
             return () => clearTimeout(timer);
         } else {
-            // Se não estiver dormindo, não mostrar a imagem estática
             setShowStaticImage(false);
         }
     }, [isSleeping]);
 
-    // Selecionando a imagem correta com base na propriedade isSleeping
-    const imageSource = isSleeping
-        ? (showStaticImage ? axolotlImages[color].sleepingStatic : axolotlImages[color].sleeping)
-        : axolotlImages[color].awake;
+    const imageSource = getAxogotchiMovement(color, isSleeping, showStaticImage);
 
     return (
         <View style={styles.container}>
             <Image source={imageSource} style={styles.axolotchi} />
+            <Text>LAL</Text>
         </View>
     );
 };
