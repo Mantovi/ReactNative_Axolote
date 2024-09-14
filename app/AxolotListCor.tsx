@@ -16,8 +16,6 @@ const AxolotListCor = () => {
         setSelectedColor(color);
     };
 
-    console.log("Cor selecionada:", selectedColor);
-
 
     const handleSubmit = async () => {
         if (name.trim() && selectedColor >= 0 && selectedColor <= 2) {

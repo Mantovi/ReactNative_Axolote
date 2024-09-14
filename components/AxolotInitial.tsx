@@ -44,7 +44,6 @@ const AxolotInitial: React.FC<AxolotInitialProps> = ({ color, isSleeping }) => {
     return (
         <View style={styles.container}>
             <Image source={imageSource} style={styles.axolotchi} />
-            <Text>LAL</Text>
         </View>
     );
 };
