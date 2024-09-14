@@ -70,9 +70,9 @@ const InitialPage = () => {
     }
   }, [moonIcon]);
 
-  // if (!fontsLoaded) {
-  //   return <Text>Loading...</Text>;
-  // }
+   if (!fontsLoaded) {
+     return <Text>Loading...</Text>;
+   }
 
   return (
     <SafeAreaView style={styles.container}>
