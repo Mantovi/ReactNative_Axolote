@@ -3,15 +3,35 @@ import { SafeAreaView, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackg
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import useAxolotchiDatabase from './database/useAxolotchiDatabase';
 
 const AxolotName = () => {
     const router = useRouter();
     const [name, setName] = useState<string>('');
+    const { createAxogotchi } = useAxolotchiDatabase();
+
+    const colorMap: Record<string, number> = {
+        Albino: 0,
+        Pimentinha: 1,
+        Uranio: 2,
+    };
 
     const handleNameSubmit = async () => {
         if (name.trim()) {
-            await AsyncStorage.setItem('axolotName', name);
-            router.push('/initialPage');
+            try {
+                const colorString = await AsyncStorage.getItem('axolotColor');
+                if (colorString && colorMap[colorString]) {
+                    const color = colorMap[colorString];
+                    await createAxogotchi({
+                        name,
+                        color,
+                    });
+                    await AsyncStorage.setItem('AxolotName', name);
+                    router.push('/initialPage');
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -27,12 +47,11 @@ const AxolotName = () => {
         <SafeAreaView style={styles.container}>
             <ImageBackground
                 source={require('../imagens/imagemFundo.png')}
-                style={styles.backgroundImagem}
+                style={styles.backgroundImage}
                 resizeMode="cover"
             >
                 <View style={styles.textContainer}>
-                    <Text style={styles.title}>Escreva o nome </Text>
-                    <Text style={styles.title}>do seu Axogotchi</Text>
+                    <Text style={styles.title}>Escreva o nome do seu Axogotchi</Text>
                 </View>
                 <TextInput
                     style={styles.input}
@@ -55,7 +74,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    backgroundImagem: {
+    backgroundImage: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
@@ -64,6 +83,7 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         alignItems: 'center',
+        marginBottom: 20,
     },
     title: {
         color: '#c9c9c9',

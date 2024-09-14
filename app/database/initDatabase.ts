@@ -1,14 +1,17 @@
 import { SQLiteDatabase } from 'expo-sqlite';
 
+// Função para inicializar o banco de dados e criar a tabela
 export async function initDataBase(database: SQLiteDatabase) {
-  await database.execAsync(`
-        CREATE TABLE IF NOT EXISTS Axolotchi (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            name TEXT,
-            color TEXT,
-            hunger INTEGER,
-            sleep INTEGER,
-            fun INTEGER
-        );
-    `);
+    try {
+        await database.execAsync(`
+            CREATE TABLE IF NOT EXISTS axogotchi (
+                id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+                name TEXT,
+                color INTEGER
+            );
+        `);
+        console.log('Tabela criada com sucesso ou já existe.');
+    } catch (error) {
+        console.error('Erro ao criar a tabela:', error);
+    }
 }
