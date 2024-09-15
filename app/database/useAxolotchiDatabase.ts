@@ -85,12 +85,27 @@ export function useAxolotchiDatabase() {
     };
 
     // Coloca o Axogotchi para dormir
-    const putAxogotchiToSleep = async (id: number) => {
+    const putAxogotchiToSleep = async (id: number): Promise<NodeJS.Timeout | null> => {
         try {
-            await db.runAsync(`UPDATE axogotchi SET sleep = sleep + 10, lastUpdate = ? WHERE id = ?`, [new Date().toISOString(), id]);
+            // Atualiza o estado do axogotchi para dormir
+            await db.runAsync(`UPDATE axogotchi SET sleep = sleep, lastUpdate = ? WHERE id = ?`, [new Date().toISOString(), id]);
             console.log('Axogotchi colocado para dormir com sucesso');
+
+            // Inicia o intervalo para incrementar o atributo de sono
+            const intervalId = setInterval(async () => {
+                try {
+                    await db.runAsync(`UPDATE axogotchi SET sleep = sleep + 1, lastUpdate = ? WHERE id = ?`, [new Date().toISOString(), id]);
+                    console.log('Atributo de sono incrementado');
+                } catch (error) {
+                    console.error('Erro ao incrementar atributo de sono:', error);
+                }
+            }, 2000); // Incrementa a cada 2 segundos
+
+            // Retorna o ID do intervalo
+            return intervalId;
         } catch (error) {
             console.error('Erro ao colocar Axogotchi para dormir:', error);
+            return null; // Retorna null em caso de erro
         }
     };
 

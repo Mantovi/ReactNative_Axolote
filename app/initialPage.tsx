@@ -15,6 +15,7 @@ const InitialPage = () => {
   const [openGameMenu, setOpenGameMenu] = useState(false);
   const [openFoodMenu, setOpenFoodMenu] = useState(false);
   const [axogotchi, setAxogotchi] = useState<Axogotchi | null>(null);
+  const [sleepIntervalId, setSleepIntervalId] = useState<NodeJS.Timeout | null>(null);
   const {
     getAxogotchiById,
     feedAxogotchi,
@@ -86,7 +87,7 @@ const InitialPage = () => {
   }, []);
 
 
-  const toggleTheme = useCallback(() => {
+  const toggleTheme = useCallback(async () => {
     setBackgroundImage((currentBackgroundImage: any) =>
       currentBackgroundImage === require("../imagens/Fundo2.png")
         ? require("../imagens/Fundo3.png")
@@ -102,19 +103,48 @@ const InitialPage = () => {
     if (moonIcon === require("../Icons/Moon.png")) {
       setIsGifPlayed(true);
       setMoonIcon(require("../Icons/Sun.png"));
+      await handlePutAxogotchiToSleep();
     } else {
       setIsGifPlayed(false);
       setMoonIcon(require("../Icons/Moon.png"));
+      await stopAxogotchiSleep();
     }
   }, [moonIcon]);
 
   const handlePutAxogotchiToSleep = async () => {
     if (axogotchi) {
-      toggleTheme(); // Chama toggleTheme para aplicar as alterações
-      await putAxogotchiToSleep(axogotchi.id); // Atualiza o estado do axogotchi
-      await getAxogotchi(Number(id)); // Recarrega os dados do axogotchi
+      if (sleepIntervalId) {
+        clearInterval(sleepIntervalId);
+      }
+      const intervalId = await putAxogotchiToSleep(axogotchi.id);
+      if (intervalId) {
+        setSleepIntervalId(intervalId);
+      }
+      await getAxogotchi(Number(id));
     }
   };
+
+  const stopAxogotchiSleep = async () => {
+    if (sleepIntervalId) {
+      console.log('Parando o intervalo de sono...');
+      clearInterval(sleepIntervalId);
+      setSleepIntervalId(null);
+    }
+    await getAxogotchi(Number(id));
+  };
+
+  useEffect(() => {
+    return () => {
+      if (sleepIntervalId) {
+        clearInterval(sleepIntervalId);
+      }
+    };
+  }, [sleepIntervalId]);
+
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>;
+  }
+
 
   if (!fontsLoaded) {
     return <Text>Loading...</Text>;
