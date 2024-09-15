@@ -56,6 +56,7 @@ const AxolotListCor = () => {
                     placeholder="Digite o nome"
                     value={name}
                     onChangeText={setName}
+                    maxLength={8}
                 />
                 <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Confirmar</Text>
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#000',
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 10,
         marginBottom: 20,
         backgroundColor: '#fff',
         fontFamily: 'PressStart2P',
@@ -113,12 +114,15 @@ const styles = StyleSheet.create({
         borderColor: '#000',
         borderWidth: 2,
         alignItems: 'center',
-        marginVertical: 10,
     },
     buttonText: {
-        color: '#000',
-        fontSize: 18,
+        color: '#c9c9c9',
+        fontSize: 16,
         fontFamily: 'PressStart2P',
+        textShadowColor: '#000',
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 1,
+        textAlign: 'center',
     },
 });
 

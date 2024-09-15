@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import useAxolotchiDatabase from './database/useAxolotchiDatabase';
 import { Axogotchi } from '@/models/Axogotchi';
@@ -27,21 +27,31 @@ const AxolotList = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            {axogotchis.length > 0 ? ( // Verifica se há Axogotchis para exibir
-                <FlatList
-                    data={axogotchis}
-                    keyExtractor={(item) => item.id.toString()}
-                    renderItem={({ item }) => (
-                        <AxolotCor
-                            name={item.name}
-                            image={Axogotchis[item.color]?.sleepingStatic} // Exibe a imagem correta baseada na cor
-                            onPress={() => router.push({ pathname: '/initialPage', params: { id: item.id } })}
+            <ImageBackground
+                source={require('../imagens/imagemFundo.png')}
+                style={styles.backgroundImagem}
+                resizeMode="cover"
+            >
+                <View style={styles.itensContainer}>
+                    {axogotchis.length > 0 ? ( // Verifica se há Axogotchis para exibir
+                        <FlatList
+                            data={axogotchis}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => (
+                                <AxolotCor
+                                    name={item.name}
+                                    image={Axogotchis[item.color]?.sleepingStatic} // Exibe a imagem correta baseada na cor
+                                    onPress={() => router.push({ pathname: '/initialPage', params: { id: item.id } })}
+                                />
+                            )}
                         />
+
+                    ) : (
+                        <Text>Nenhum Axogotchi encontrado.</Text>
                     )}
-                />
-            ) : (
-                <Text>Nenhum Axogotchi encontrado.</Text>
-            )}
+
+                </View>
+            </ImageBackground>
         </SafeAreaView>
     );
 };
@@ -49,7 +59,14 @@ const AxolotList = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    itensContainer: {
+        marginTop: 20,
         padding: 16,
+    },
+    colorItem: {
+        alignItems: 'center',
+        margin: 10,
     },
     item: {
         padding: 16,
@@ -58,6 +75,11 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 18,
+    },
+    backgroundImagem: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

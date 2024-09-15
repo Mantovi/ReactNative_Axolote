@@ -3,7 +3,11 @@ import { Image, ImageBackground, ImageBackgroundProps, ImageSourcePropType } fro
 export type Axogotchi = {
     id: number,
     name: string,
-    color: number
+    color: number,
+    hunger: number,
+    sleep: number,
+    fun: number,
+    lastUpdate: Date,
 };
 
 // Mapeamento das imagens para cada cor
