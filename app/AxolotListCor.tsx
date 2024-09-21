@@ -85,9 +85,9 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     selectedColorItem: {
-        borderColor: '#FFD700',
-        borderWidth: 2,
-        borderRadius: 10,
+        borderColor: '#00EED1',
+        borderWidth: 5,
+        borderRadius: 50,
     },
     colorText: {
         fontFamily: 'PressStart2P',
