@@ -174,28 +174,39 @@ export function useAxolotchiDatabase() {
     };
 
     const decreaseAxogotchiAttributes = async () => {
-        try {
-            const axogotchis = await getAxogotchis();
-            const currentTime = Date.now();
+        const axogotchis = await getAxogotchis();
 
-            for (const axogotchi of axogotchis) {
-                const lastUpdate = new Date(axogotchi.lastUpdate).getTime();
-                const hoursPassed = Math.floor((currentTime - lastUpdate) / (1000 * 60 * 60)); // Tempo passado em horas
+        for (const axogotchi of axogotchis) {
+            const minutesPassed = (Date.now() - new Date(axogotchi.lastUpdate).getTime()) / (1000 * 60);
 
-                if (hoursPassed > 0) {
-                    const newHunger = Math.max(0, axogotchi.hunger - hoursPassed);
-                    const newFun = Math.max(0, axogotchi.fun - hoursPassed);
-                    const newSleep = Math.max(0, axogotchi.sleep - hoursPassed);
+            if (Math.floor(minutesPassed) >= 2) { // Verifica se passaram pelo menos 2 minutos
+                const statement = await db.prepareAsync(
+                    "UPDATE axogotchi SET hunger = $hunger, fun = $fun, sleep = $sleep, lastUpdate = $lastUpdate WHERE id = $id"
+                );
 
-                    await db.runAsync(
-                        `UPDATE axogotchi SET hunger = ?, fun = ?, sleep = ?, lastUpdate = ? WHERE id = ?`,
-                        [newHunger, newFun, newSleep, new Date().toISOString(), axogotchi.id]
-                    );
-                    console.log(`Atributos do Axogotchi ${axogotchi.name} atualizados: Fome=${newHunger}, Diversão=${newFun}, Sono=${newSleep}`);
+                const newHunger = Math.max(0, axogotchi.hunger - Math.floor(minutesPassed / 2));
+                const newFun = Math.max(0, axogotchi.fun - Math.floor(minutesPassed / 2));
+                const newSleep = Math.max(0, axogotchi.sleep - Math.floor(minutesPassed / 2));
+
+                try {
+                    await statement.executeAsync({
+                        $hunger: newHunger,
+                        $fun: newFun,
+                        $sleep: newSleep,
+                        $lastUpdate: new Date().toISOString(), // Atualiza a data
+                        $id: axogotchi.id
+                    });
+
+                    // Logs para monitoramento
+                    console.log(`Axogotchi ${axogotchi.name} atualizado: Fome=${newHunger}, Diversão=${newFun}, Sono=${newSleep}`);
+                } catch (error) {
+                    console.error('Erro ao atualizar atributos do Axogotchi:', error);
+                } finally {
+                    await statement.finalizeAsync();
                 }
+            } else {
+                console.log(`Axogotchi ${axogotchi.name} não atualizado, minutos passados: ${minutesPassed}`);
             }
-        } catch (error) {
-            console.error('Erro ao diminuir os atributos:', error);
         }
     };
 
