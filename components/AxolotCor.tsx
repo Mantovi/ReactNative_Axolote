@@ -1,5 +1,5 @@
 import { useFonts } from 'expo-font';
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
 interface AxolotlItemProps {
@@ -12,6 +12,20 @@ interface AxolotlItemProps {
 }
 
 const AxolotCor: React.FC<AxolotlItemProps> = ({ name, image, hunger, sleep, fun, onPress }) => {
+
+    const [attributeOutline, setAttributeOutline] = useState(require("../Icons/atributo_container.png"));
+
+    const calculateStatus = (hunger: number, sleep: number, fun: number): string => {
+        const total = hunger + sleep + fun;
+        if (total === 0) return "morto";
+        if (total <= 50) return "crítico";
+        if (total <= 100) return "muito triste";
+        if (total <= 150) return "triste";
+        if (total <= 200) return "ok";
+        if (total <= 250) return "bem";
+        return "muito bem";
+    };
+
     const [fontsLoaded] = useFonts({
         'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
     });
@@ -23,8 +37,12 @@ const AxolotCor: React.FC<AxolotlItemProps> = ({ name, image, hunger, sleep, fun
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
             <View style={styles.contentContainer}>
+                <Text style={styles.statusText}>{calculateStatus(hunger, sleep, fun)}</Text>
                 <Image source={image} style={styles.image} />
                 <Text style={styles.name}>{name}</Text>
+
+
+
                 <View style={styles.attributesContainer}>
                     <View style={styles.attribute}>
                         <Text style={styles.attributeLabel}>Fome</Text>
@@ -99,6 +117,16 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 2, height: 2 },
         textShadowRadius: 1,
         marginBottom: 20,
+    },
+    statusText: {
+        color: '#c9c9c9',
+        fontSize: 16,
+        fontFamily: 'PressStart2P',
+        textShadowColor: '#000',
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 1,
+        width: '100%',
+        paddingTop: 8,
     },
 });
 

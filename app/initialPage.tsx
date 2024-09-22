@@ -209,7 +209,10 @@ const InitialPage = () => {
           {openFoodMenu && (
             <View style={styles.foodMenu}>
               <Pressable style={styles.menuItem} onPress={handleFeed}>
-                <Text style={styles.menuText}>Comida</Text>
+                <Image style={styles.foodImage} source={require('../imagens/foods/FOOD1.png')} />
+              </Pressable>
+              <Pressable style={styles.menuItem} onPress={handleFeed}>
+                <Image style={styles.foodImage} source={require('../imagens/foods/FOOD2.png')} />
               </Pressable>
             </View>
           )}
@@ -364,6 +367,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     resizeMode: "contain",
+
   },
   gameMenu: {
     position: 'absolute',
@@ -379,9 +383,14 @@ const styles = StyleSheet.create({
     bottom: 110,
     left: 15,
     backgroundColor: '#F6E5D7',
-    borderRadius: 10,
+    borderRadius: 40,
     padding: 10,
     elevation: 5,
+  },
+  foodImage: {
+    width: 65,
+    height: 65,
+    resizeMode: 'contain',
   },
   menuItem: {
     padding: 10,
