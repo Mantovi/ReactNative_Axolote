@@ -16,6 +16,8 @@ const InitialPage = () => {
   const [openFoodMenu, setOpenFoodMenu] = useState(false);
   const [axogotchi, setAxogotchi] = useState<Axogotchi | null>(null);
   const [sleepIntervalId, setSleepIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [funIntervalId, setFunIntervalId] = useState<NodeJS.Timeout | null>(null);
+
   const {
     getAxogotchiById,
     feedAxogotchi,
@@ -100,38 +102,27 @@ const InitialPage = () => {
         : require("../Icons/nameOutline.png")
     );
 
-    if (moonIcon === require("../Icons/Moon.png")) {
-      setIsGifPlayed(true);
-      setMoonIcon(require("../Icons/Sun.png"));
-      await handlePutAxogotchiToSleep();
-    } else {
-      setIsGifPlayed(false);
-      setMoonIcon(require("../Icons/Moon.png"));
-      await stopAxogotchiSleep();
-    }
-  }, [moonIcon]);
+    const isDayMode = moonIcon === require("../Icons/Moon.png");
 
-  const handlePutAxogotchiToSleep = async () => {
+    setMoonIcon(isDayMode ? require("../Icons/Sun.png") : require("../Icons/Moon.png"));
+    setIsGifPlayed(isDayMode);
+
     if (axogotchi) {
       if (sleepIntervalId) {
         clearInterval(sleepIntervalId);
+        setSleepIntervalId(null);
       }
-      const intervalId = await putAxogotchiToSleep(axogotchi.id);
-      if (intervalId) {
-        setSleepIntervalId(intervalId);
+
+      if (isDayMode) {
+        const intervalId = await putAxogotchiToSleep(axogotchi.id);
+        if (intervalId) {
+          setSleepIntervalId(intervalId);
+        }
       }
+
       await getAxogotchi(Number(id));
     }
-  };
-
-  const stopAxogotchiSleep = async () => {
-    if (sleepIntervalId) {
-      console.log('Parando o intervalo de sono...');
-      clearInterval(sleepIntervalId);
-      setSleepIntervalId(null);
-    }
-    await getAxogotchi(Number(id));
-  };
+  }, [moonIcon, axogotchi, id, sleepIntervalId]);
 
   useEffect(() => {
     return () => {
@@ -165,9 +156,6 @@ const InitialPage = () => {
       setAxogotchi(updatedAxogotchi);
     }
   };
-
-
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -236,10 +224,22 @@ const InitialPage = () => {
 
           {openGameMenu && (
             <View style={styles.gameMenu}>
-              <Pressable style={styles.menuItem} onPress={() => router.push('/nativeGame')}>
+              <Pressable
+                style={styles.menuItem}
+                onPress={async () => {
+                  await handlePlay(); // Chama a função para incrementar a diversão
+                  router.push('/nativeGame'); // Navega para o Game 1
+                }}
+              >
                 <Text style={styles.menuText}>Game 1</Text>
               </Pressable>
-              <Pressable style={styles.menuItem} onPress={() => router.push("/MemoryGame")}>
+              <Pressable
+                style={styles.menuItem}
+                onPress={async () => {
+                  await handlePlay(); // Chama a função para incrementar a diversão
+                  router.push('/MemoryGame'); // Navega para o Game 2
+                }}
+              >
                 <Text style={styles.menuText}>Game 2</Text>
               </Pressable>
             </View>

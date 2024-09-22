@@ -77,8 +77,26 @@ export function useAxolotchiDatabase() {
     // Alimenta o Axogotchi
     const feedAxogotchi = async (id: number) => {
         try {
-            await db.runAsync(`UPDATE axogotchi SET hunger = hunger + 10, lastUpdate = ? WHERE id = ?`, [new Date().toISOString(), id]);
-            console.log('Axogotchi alimentado com sucesso');
+            const result = await db.getFirstAsync<{ hunger: number }>(
+                `SELECT hunger FROM axogotchi WHERE id = ?`,
+                [id]
+            );
+
+            // Verifica se result é null
+            if (result === null) {
+                console.error('Axogotchi não encontrado no banco de dados.');
+                return;
+            }
+
+            const currentHunger = result.hunger;
+            const newHunger = Math.min(currentHunger + 10, 100); // Incrementa e garante que não ultrapasse 100
+
+            await db.runAsync(
+                `UPDATE axogotchi SET hunger = ?, lastUpdate = ? WHERE id = ?`,
+                [newHunger, new Date().toISOString(), id]
+            );
+
+            console.log('Axogotchi alimentado com sucesso, fome atual:', newHunger);
         } catch (error) {
             console.error('Erro ao alimentar Axogotchi:', error);
         }
@@ -86,20 +104,50 @@ export function useAxolotchiDatabase() {
 
     // Coloca o Axogotchi para dormir
     const putAxogotchiToSleep = async (id: number): Promise<NodeJS.Timeout | null> => {
+        const updateAxogotchiSleep = async (retryCount: number = 0): Promise<void> => {
+            try {
+                const result = await db.getFirstAsync<{ sleep: number }>(
+                    `SELECT sleep FROM axogotchi WHERE id = ?`,
+                    [id]
+                );
+
+                // Verifica se result é null
+                if (result === null) {
+                    console.error('Axogotchi não encontrado no banco de dados.');
+                    return;
+                }
+
+                const currentSleep = result.sleep;
+
+                if (currentSleep < 100) {
+                    const newSleep = Math.min(currentSleep + 1, 100); // Incrementa e garante que não ultrapasse 100
+                    await db.runAsync(
+                        `UPDATE axogotchi SET sleep = ?, lastUpdate = ? WHERE id = ?`,
+                        [newSleep, new Date().toISOString(), id]
+                    );
+                    console.log('Atributo de sono incrementado para', newSleep);
+                } else {
+                    console.log('Atributo de sono já está no máximo');
+                }
+            } catch (error) {
+                console.error('Erro ao incrementar atributo de sono:', error);
+                if (retryCount < 5) { // Tentativas de retry, até 5 vezes
+                    console.log(`Tentando novamente... (${retryCount + 1}/5)`);
+                    setTimeout(() => updateAxogotchiSleep(retryCount + 1), 1000); // Retry após 1 segundo
+                }
+            }
+        };
+
         try {
             // Atualiza o estado do axogotchi para dormir
-            await db.runAsync(`UPDATE axogotchi SET sleep = sleep, lastUpdate = ? WHERE id = ?`, [new Date().toISOString(), id]);
+            await db.runAsync(
+                `UPDATE axogotchi SET sleep = sleep, lastUpdate = ? WHERE id = ?`,
+                [new Date().toISOString(), id]
+            );
             console.log('Axogotchi colocado para dormir com sucesso');
 
             // Inicia o intervalo para incrementar o atributo de sono
-            const intervalId = setInterval(async () => {
-                try {
-                    await db.runAsync(`UPDATE axogotchi SET sleep = sleep + 1, lastUpdate = ? WHERE id = ?`, [new Date().toISOString(), id]);
-                    console.log('Atributo de sono incrementado');
-                } catch (error) {
-                    console.error('Erro ao incrementar atributo de sono:', error);
-                }
-            }, 2000); // Incrementa a cada 2 segundos
+            const intervalId = setInterval(() => updateAxogotchiSleep(), 2000); // Incrementa a cada 2 segundos
 
             // Retorna o ID do intervalo
             return intervalId;
@@ -109,10 +157,16 @@ export function useAxolotchiDatabase() {
         }
     };
 
+
     // Brinca com o Axogotchi
     const playWithAxogotchi = async (id: number) => {
         try {
-            await db.runAsync(`UPDATE axogotchi SET fun = fun + 10, lastUpdate = ? WHERE id = ?`, [new Date().toISOString(), id]);
+            await db.runAsync(`
+            UPDATE axogotchi 
+            SET fun = CASE WHEN fun + 10 > 100 THEN 100 ELSE fun + 10 END, 
+                lastUpdate = ? 
+            WHERE id = ?
+          `, [new Date().toISOString(), id]);
             console.log('Axogotchi brincado com sucesso');
         } catch (error) {
             console.error('Erro ao brincar com Axogotchi:', error);
