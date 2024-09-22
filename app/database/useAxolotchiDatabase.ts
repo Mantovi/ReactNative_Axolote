@@ -17,7 +17,7 @@ export function useAxolotchiDatabase() {
         `);
 
         try {
-            await statement.executeAsync({ $name: name, $color: color });
+            await statement.executeAsync({ $name: name, $color:g color });
             console.log('Inserindo Axogotchi:');
         } catch (e) {
             console.error('Erro ao criar Axogotchi:', e);

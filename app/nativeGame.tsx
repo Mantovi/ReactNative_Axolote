@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Dimensions, Button, Image, ImageBackground, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import { Gyroscope } from 'expo-sensors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
@@ -12,41 +12,41 @@ interface Obstacle {
   y: number;
   width: number;
   height: number;
-  type: number; // Adicionei o campo 'type' para selecionar a imagem
+  type: number; // Tipo do obstáculo para selecionar a imagem
 }
 
 const nativeGame: React.FC = () => {
-
-  let [fontsLoaded] = useFonts({
+  // Fontes personalizadas
+  const [fontsLoaded] = useFonts({
     'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
   });
 
-  const backgroundImage = require("../imagens/NightScreenGame.png")
-  const [position, setPosition] = useState({ x: width / 2, y: height - 100 })
-  const [gyroscopeData, setGyroscopeData] = useState({ x: 0, y: 0, z: 0 })
-  const [lives, setLives] = useState(3)
-  const [isGameOver, setIsGameOver] = useState(false)
-  const [obstacles, setObstacles] = useState<Obstacle[]>([])
-  const [hasCollided, setHasCollided] = useState(false)
-  const [scorePoints, setScorePoints] = useState(0)
-  const [obstacleSpeed, setObstacleSpeed] = useState(15)
-  const [obstacleInterval, setObstacleInterval] = useState(2500)
-  const [playerColor, setPlayerColor] = useState<'Albino' | 'Pimentinha' | 'Uranio' | null>(null) // Cor do axolote
-  const [isPaused, setIsPaused] = useState(false)
+  // Imagens de background e botões
+  const backgroundImage = require('../imagens/NightScreenGame.png');
+  const pauseButtonImage = require('../Icons/pauseButton.png');
+  const playButtonImage = require('../Icons/playButton.png');
 
-  const pauseButtonImage = require("../Icons/pauseButton.png")
-  const playButtonImage = require("../Icons/playButton.png")
+  // Estado do jogador, obstáculos e jogo
+  const [position, setPosition] = useState({ x: width / 2, y: height - 100 });
+  const [gyroscopeData, setGyroscopeData] = useState({ x: 0, y: 0, z: 0 });
+  const [lives, setLives] = useState(3);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [obstacles, setObstacles] = useState<Obstacle[]>([]);
+  const [scorePoints, setScorePoints] = useState(0);
+  const [obstacleSpeed, setObstacleSpeed] = useState(15);
+  const [obstacleInterval, setObstacleInterval] = useState(2500);
+  const [playerColor, setPlayerColor] = useState<'Albino' | 'Pimentinha' | 'Uranio' | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
-  // Array de imagens de obstáculos
+  // Arrays de imagens
   const obstacleImages = [
-    require("../Icons/Bomb.png"),
-    require("../Icons/Sword.png"),
-    require("../Icons/Skull.png"),
-    require("../Icons/Mushroom.png"),
-    require("../Icons/Thunder.png"),
+    require('../Icons/Bomb.png'),
+    require('../Icons/Sword.png'),
+    require('../Icons/Skull.png'),
+    require('../Icons/Mushroom.png'),
+    require('../Icons/Thunder.png'),
   ];
 
-  // Array de imagens do jogador (axolotes)
   const playerImages = {
     Albino: require('../assets/gifs/albinoSwimming.gif'),
     Pimentinha: require('../assets/gifs/pimentinhaSwimming.gif'),
@@ -56,46 +56,42 @@ const nativeGame: React.FC = () => {
   // Função para gerar obstáculos
   const generateObstacle = () => {
     if (obstacles.length < 7) {
-      const obstacle: Obstacle = {
+      const newObstacle: Obstacle = {
         x: Math.random() * (width - 50),
         y: -50,
         width: 50,
         height: 60,
-        type: Math.floor(Math.random() * obstacleImages.length)
+        type: Math.floor(Math.random() * obstacleImages.length),
       };
-      setObstacles((prevObstacles) => [...prevObstacles, obstacle]);
+      setObstacles((prevObstacles) => [...prevObstacles, newObstacle]);
     }
   };
 
   useEffect(() => {
-    // Recupera a cor do axolote selecionado
+    // Recuperar a cor do jogador
     const fetchPlayerColor = async () => {
       const storedColor = await AsyncStorage.getItem('axolotColor');
-      if (storedColor) {
-        setPlayerColor(storedColor as 'Albino' | 'Pimentinha' | 'Uranio');
-      }
+      console.log("player color:", storedColor)
+      if (storedColor) setPlayerColor(storedColor as 'Albino' | 'Pimentinha' | 'Uranio');
     };
     fetchPlayerColor();
 
-    // Inicia o giroscópio
+    // Iniciar giroscópio
     Gyroscope.setUpdateInterval(70);
-    const subscription = Gyroscope.addListener((data) => {
-      setGyroscopeData(data);
-    });
+    const subscription = Gyroscope.addListener((data) => setGyroscopeData(data));
 
-    // Gera um obstáculo a cada 2 segundos
+    // Geração de obstáculos se o jogo não estiver pausado
     if (!isPaused) {
-      const obstacleIntervalID = setInterval(generateObstacle, obstacleInterval)
-  
+      const obstacleIntervalID = setInterval(generateObstacle, obstacleInterval);
       return () => {
         subscription.remove();
         clearInterval(obstacleIntervalID);
       };
     }
-  }, [obstacleInterval, isPaused]);
+  }, [isPaused, obstacleInterval]);
 
-  // Atualiza a posição do jogador e movimenta os obstáculos
   useEffect(() => {
+    // Atualizar posição do jogador e obstáculos
     if (!isGameOver && !isPaused) {
       const newX = position.x + gyroscopeData.y * 15;
       const newY = position.y + gyroscopeData.x * 15;
@@ -116,10 +112,9 @@ const nativeGame: React.FC = () => {
         if (updatedObstacles.length < prevObstacles.length) {
           setScorePoints((prevScorePoints) => {
             const newScorePoints = prevScorePoints + 50;
-
             if (newScorePoints % 100 === 0) {
               setObstacleSpeed((prevSpeed) => Math.min(30, prevSpeed + 1));
-              setObstacleInterval((prevInterval) => Math.max(800, prevInterval - 100))
+              setObstacleInterval((prevInterval) => Math.max(800, prevInterval - 100));
             }
             return newScorePoints;
           });
@@ -129,60 +124,50 @@ const nativeGame: React.FC = () => {
     }
   }, [gyroscopeData, isGameOver, isPaused]);
 
-  const togglePause = () => {
-    setIsPaused((prev) => !prev);
-  };
+  // Pausar o jogo
+  const togglePause = () => setIsPaused((prev) => !prev);
 
-  // Verificar colisões e vidas
+  // Verificar colisão
   useEffect(() => {
-  if (!isGameOver) {
-    setObstacles((prevObstacles) => {
-      let collisionDetected = false;
+    if (!isGameOver) {
+      setObstacles((prevObstacles) => {
+        let collisionDetected = false;
 
-      const playerLeft = position.x;
-      const playerRight = position.x + 100;
-      const playerTop = position.y;
-      const playerBottom = position.y + 100 - 60;
+        const playerBounds = {
+          left: position.x,
+          right: position.x + 100,
+          top: position.y,
+          bottom: position.y + 40, // ajustado para a altura do jogador
+        };
 
-      // Verifica se o jogador colidiu com algum obstáculo
-      const updatedObstacles = prevObstacles.reduce((acc: Obstacle[], obstacle) => {
-        const obstacleLeft = obstacle.x;
-        const obstacleRight = obstacle.x + obstacle.width;
-        const obstacleTop = obstacle.y;
-        const obstacleBottom = obstacle.y + obstacle.height;
+        const updatedObstacles = prevObstacles.filter((obstacle) => {
+          const obstacleBounds = {
+            left: obstacle.x,
+            right: obstacle.x + obstacle.width,
+            top: obstacle.y,
+            bottom: obstacle.y + obstacle.height,
+          };
 
-        // Verifica a colisão usando as coordenadas do jogador e do obstáculo
-        const collision =
-          playerRight > obstacleLeft &&
-          playerLeft < obstacleRight &&
-          playerBottom > obstacleTop &&
-          playerTop < obstacleBottom;
+          const isCollision =
+            playerBounds.right > obstacleBounds.left &&
+            playerBounds.left < obstacleBounds.right &&
+            playerBounds.bottom > obstacleBounds.top &&
+            playerBounds.top < obstacleBounds.bottom;
 
-        if (collision) {
-          if (!hasCollided && lives > 0) {
+          if (isCollision) {
             collisionDetected = true;
-            setLives((prevLives) => prevLives - 1);
+            if (lives > 0) setLives((prevLives) => prevLives - 1);
+            return false;
           }
-          // Não adiciona o obstáculo à lista se colidiu
-          return acc;
-        }
-        acc.push(obstacle);
-        return acc;
-      }, []);
+          return true;
+        });
 
-      if (collisionDetected) {
-        setHasCollided(true);
-        setTimeout(() => setHasCollided(false), 50);
-      }
+        if (collisionDetected && lives <= 0) setIsGameOver(true);
 
-      if (lives <= 0 && !isGameOver) {
-        setIsGameOver(true);
-      }
-
-      return updatedObstacles;
-    });
-  }
-}, [position, hasCollided, isGameOver, lives]);
+        return updatedObstacles;
+      });
+    }
+  }, [position, isGameOver, lives]);
 
   // Reiniciar o jogo
   const resetGame = () => {
@@ -192,76 +177,70 @@ const nativeGame: React.FC = () => {
     setIsGameOver(false);
     setScorePoints(0);
     setObstacleSpeed(6);
-    setObstacleInterval(2500)
+    setObstacleInterval(2500);
   };
 
-  if (!fontsLoaded) {
-    return null;
-  }
-
+  if (!fontsLoaded) return null;
 
   return (
-      <ImageBackground source={backgroundImage} style={styles.background}>
-        <View style={styles.container}>
-          {!isGameOver ? (
-            <>
-              {/* Mostrar a imagem do jogador com base na cor selecionada */}
-              {playerColor && (
-                <Image
-                  source={playerImages[playerColor]}
-                  style={[
-                    styles.player,
-                    { left: position.x, top: position.y, width: 100, height: 100 / 2.42 },
-                  ]}
-                />
-              )}
+    <ImageBackground source={backgroundImage} style={styles.background}>
+      <View style={styles.container}>
+        {!isGameOver ? (
+          <>
+            {/* Mostrar a imagem do jogador com base na cor */}
+            {playerColor && (
+              <Image
+                source={playerImages[playerColor]}
+                style={[styles.player, { left: position.x, top: position.y }]}
+              />
+            )}
 
-              {obstacles.map((obstacle, index) => (
-                <Image
-                  key={index}
-                  source={obstacleImages[obstacle.type]}
-                  style={[
-                    styles.obstacle,
-                    { left: obstacle.x, top: obstacle.y, width: obstacle.width, height: obstacle.height },
-                  ]}
-                />
-              ))}
+            {/* Renderizar obstáculos */}
+            {obstacles.map((obstacle, index) => (
+              <Image
+                key={index}
+                source={obstacleImages[obstacle.type]}
+                style={[styles.obstacle, { left: obstacle.x, top: obstacle.y }]}
+              />
+            ))}
 
-              <Text style={styles.lives}>Vidas: {lives}</Text>
-              <Text style={styles.scorePoints}>Pontos: {scorePoints}</Text>
-              <View style={styles.pauseButtonPosition}>
-                <TouchableOpacity style={styles.pauseButtonContainer} onPress={togglePause}>
-                  <Image
-                  source={isPaused ? playButtonImage : pauseButtonImage}
-                  style={styles.pauseButtonImage}/>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.backButtonPosition}>
-                <TouchableOpacity style={styles.backButtonContainer} onPress={() => router.back()}>
-                  <Image
-                  source={require("../Icons/backButton.png")}
-                  style={styles.backButtonImage}/>
-                </TouchableOpacity>
-              </View>
-            </>
-          ) : (
-            <View style={styles.gameOverContainer}>
-              <Text style={styles.gameOverText}>Game Over</Text>
-              <TouchableOpacity style={styles.resetButtonContainer} onPress={resetGame}>
-                <Text style={styles.resetButton}>Reiniciar</Text>
+            {/* Pontuação e vidas */}
+            <Text style={styles.lives}>Vidas: {lives}</Text>
+            <Text style={styles.scorePoints}>Pontos: {scorePoints}</Text>
+
+            {/* Botão de pausa */}
+            <View style={styles.pauseButtonPosition}>
+              <TouchableOpacity onPress={togglePause} style={styles.pauseButtonContainer}>
+                <Image source={isPaused ? playButtonImage : pauseButtonImage} style={styles.pauseButtonImage} />
               </TouchableOpacity>
             </View>
-          )}
-        </View>
-      </ImageBackground>
+
+            {/* Botão de voltar */}
+            <View style={styles.backButtonPosition}>
+              <TouchableOpacity onPress={() => router.back()} style={styles.backButtonContainer}>
+                <Image source={require('../Icons/backButton.png')} style={styles.backButtonImage} />
+              </TouchableOpacity>
+            </View>
+          </>
+        ) : (
+          <View style={styles.gameOverContainer}>
+            <Text style={styles.gameOverText}>Game Over</Text>
+            <TouchableOpacity onPress={resetGame} style={styles.resetButtonContainer}>
+              <Text style={styles.resetButton}>Reiniciar</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </ImageBackground>
   );
 };
 
+// Estilos
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: "100%",
-    height: "100%"
+    width: '100%',
+    height: '100%',
   },
   container: {
     flex: 1,
@@ -269,26 +248,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   player: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100 / 2.42,
     position: 'absolute',
   },
   obstacle: {
+    width: 50,
+    height: 60,
     position: 'absolute',
   },
   lives: {
     position: 'absolute',
     top: 40,
     fontSize: 24,
-    fontFamily: "PressStart2P",
-    color: "lightgreen"
+    fontFamily: 'PressStart2P',
+    color: 'lightgreen',
   },
   scorePoints: {
     position: 'absolute',
     top: 80,
     fontSize: 24,
-    fontFamily: "PressStart2P",
-    color: "lightgreen"
+    fontFamily: 'PressStart2P',
+    color: 'lightgreen',
   },
   gameOverContainer: {
     justifyContent: 'center',
@@ -296,64 +277,60 @@ const styles = StyleSheet.create({
   },
   gameOverText: {
     fontSize: 32,
+    fontFamily: 'PressStart2P',
+    color: 'lightgreen',
     marginBottom: 20,
-    fontFamily: "PressStart2P",
-    color: "lightgreen"
   },
   pauseButtonPosition: {
     position: 'absolute',
-    bottom: 30,  
-    left: 250,    
-    width: 70,   
-    height: 70,
-    alignItems: 'center',
-    justifyContent: 'center', 
-  },
-  pauseButtonContainer: {
-    backgroundColor: "darkgreen",
+    bottom: 30,
+    left: 250,
     width: 70,
     height: 70,
+  },
+  pauseButtonContainer: {
+    backgroundColor: 'darkgreen',
     borderRadius: 10,
-    alignItems: 'center',    
-    justifyContent: 'center', 
+    width: 70,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   pauseButtonImage: {
     width: 60,
     height: 60,
-    resizeMode: "contain",
+    resizeMode: 'contain',
   },
   backButtonPosition: {
     position: 'absolute',
-    bottom: 30,  
-    right: 250,    
-    width: 70,   
-    height: 70,
-    alignItems: 'center',
-    justifyContent: 'center', 
-  },
-  backButtonContainer: {
-    backgroundColor: "darkgreen",
+    bottom: 30,
+    right: 250,
     width: 70,
     height: 70,
+  },
+  backButtonContainer: {
+    backgroundColor: 'darkgreen',
     borderRadius: 10,
-    alignItems: 'center',    
-    justifyContent: 'center', 
+    width: 70,
+    height: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backButtonImage: {
     width: 60,
     height: 60,
-    resizeMode: "contain",
-  },
-  resetButton: {
-    color: 'white',
-    fontSize: 24,
-    fontFamily: 'PressStart2P'
+    resizeMode: 'contain',
   },
   resetButtonContainer: {
     backgroundColor: 'green',
     padding: 10,
     borderRadius: 20,
-  }
+  },
+  resetButton: {
+    fontFamily: 'PressStart2P',
+    fontSize: 24,
+    color: 'white',
+  },
 });
 
 export default nativeGame;

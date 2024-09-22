@@ -12,4 +12,5 @@ export interface AxogotchisMovement {
     awake: ImageBackgroundProps;
     sleeping: ImageBackgroundProps;
     sleepingStatic: ImageBackgroundProps;
+    swimming: ImageBackgroundProps;
 }
