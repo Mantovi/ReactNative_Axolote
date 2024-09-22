@@ -179,14 +179,14 @@ export function useAxolotchiDatabase() {
         for (const axogotchi of axogotchis) {
             const minutesPassed = (Date.now() - new Date(axogotchi.lastUpdate).getTime()) / (1000 * 60);
 
-            if (Math.floor(minutesPassed) >= 2) { // Verifica se passaram pelo menos 2 minutos
+            if (Math.floor(minutesPassed) >= 60) { // Verifica se passaram pelo menos 2 minutos
                 const statement = await db.prepareAsync(
                     "UPDATE axogotchi SET hunger = $hunger, fun = $fun, sleep = $sleep, lastUpdate = $lastUpdate WHERE id = $id"
                 );
 
-                const newHunger = Math.max(0, axogotchi.hunger - Math.floor(minutesPassed / 2));
-                const newFun = Math.max(0, axogotchi.fun - Math.floor(minutesPassed / 2));
-                const newSleep = Math.max(0, axogotchi.sleep - Math.floor(minutesPassed / 2));
+                const newHunger = Math.max(0, axogotchi.hunger - Math.floor(minutesPassed / 60));
+                const newFun = Math.max(0, axogotchi.fun - Math.floor(minutesPassed / 60));
+                const newSleep = Math.max(0, axogotchi.sleep - Math.floor(minutesPassed / 60));
 
                 try {
                     await statement.executeAsync({
