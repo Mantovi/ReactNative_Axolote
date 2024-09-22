@@ -40,7 +40,10 @@ const AxolotList = () => {
                             renderItem={({ item }) => (
                                 <AxolotCor
                                     name={item.name}
-                                    image={Axogotchis[item.color]?.sleepingStatic} // Exibe a imagem correta baseada na cor
+                                    image={Axogotchis[item.color]?.awake} // Exibe a imagem correta baseada na cor
+                                    hunger={item.hunger} // Atributo fome
+                                    sleep={item.sleep}   // Atributo sono
+                                    fun={item.fun}       // Atributo diversão
                                     onPress={() => router.push({ pathname: '/initialPage', params: { id: item.id } })}
                                 />
                             )}

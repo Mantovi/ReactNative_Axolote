@@ -1,4 +1,4 @@
-import { Image, ImageBackground, ImageBackgroundProps, ImageSourcePropType } from "react-native";
+import { ImageBackgroundProps } from "react-native";
 
 export type Axogotchi = {
     id: number,

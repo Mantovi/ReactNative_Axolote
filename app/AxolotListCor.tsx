@@ -6,6 +6,7 @@ import AxolotInitial from '../components/AxolotInitial'; // Atualize o caminho c
 import useAxolotchiDatabase from './database/useAxolotchiDatabase';
 import { Axogotchis } from '@/mock/Axolotchis';
 import AxolotCor from '@/components/AxolotCor';
+import AxolotItem from '@/components/AxolotItem';
 
 const AxolotListCor = () => {
     const [selectedColor, setSelectedColor] = useState<number>(0);
@@ -43,7 +44,7 @@ const AxolotListCor = () => {
                             ]}
                             onPress={() => handleColorSelect(index)}
                         >
-                            <AxolotCor
+                            <AxolotItem
                                 name={['Albino', 'Pimentinha', 'Urânio'][index]}
                                 image={axogotchi.sleepingStatic} // Utilize a imagem estática
                                 onPress={() => handleColorSelect(index)}
@@ -85,9 +86,9 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     selectedColorItem: {
-        borderColor: '#00EED1',
+        borderColor: '#00FFA1',
         borderWidth: 5,
-        borderRadius: 50,
+        borderRadius: 30,
     },
     colorText: {
         fontFamily: 'PressStart2P',
