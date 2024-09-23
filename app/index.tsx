@@ -1,10 +1,13 @@
 import { useFonts } from "expo-font";
 import { router } from "expo-router";
 import { Text, View, StyleSheet, SafeAreaView, ImageBackground, TouchableOpacity } from "react-native";
-
+import useAxolotchiDatabase from "./database/useAxolotchiDatabase";
+import { useEffect } from "react";
 
 
 const index = () => {
+    const { decreaseAxogotchiAttributes } = useAxolotchiDatabase();
+
     const [fontsLoaded] = useFonts({
         'PressStart2P': require('../assets/fonts/PressStart2P-Regular.ttf'),
 
@@ -14,7 +17,14 @@ const index = () => {
         return <Text>Loading...</Text>
     }
 
+    useEffect(() => {
+        const initialize = async () => {
+            await decreaseAxogotchiAttributes(); // Chamada da função para diminuir atributos
+            // Outras inicializações se necessário
+        };
 
+        initialize();
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>

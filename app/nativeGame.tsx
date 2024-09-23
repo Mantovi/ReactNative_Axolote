@@ -4,6 +4,7 @@ import { Gyroscope } from 'expo-sensors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
 import { useFonts } from 'expo-font';
+import { Axogotchis } from '../mock/Axolotchis'; // Importando a lista de cores e movimentos
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,13 +30,13 @@ const nativeGame: React.FC = () => {
   // Estado do jogador, obstáculos e jogo
   const [position, setPosition] = useState({ x: width / 2, y: height - 100 });
   const [gyroscopeData, setGyroscopeData] = useState({ x: 0, y: 0, z: 0 });
-  const [lives, setLives] = useState(3);
+  const [lives, setLives] = useState(5);
   const [isGameOver, setIsGameOver] = useState(false);
   const [obstacles, setObstacles] = useState<Obstacle[]>([]);
   const [scorePoints, setScorePoints] = useState(0);
   const [obstacleSpeed, setObstacleSpeed] = useState(15);
   const [obstacleInterval, setObstacleInterval] = useState(2500);
-  const [playerColor, setPlayerColor] = useState<'Albino' | 'Pimentinha' | 'Uranio' | null>(null);
+  const [playerColor, setPlayerColor] = useState(Axogotchis[0]); // Cor padrão: Albino
   const [isPaused, setIsPaused] = useState(false);
 
   // Arrays de imagens
@@ -46,13 +47,7 @@ const nativeGame: React.FC = () => {
     require('../Icons/Mushroom.png'),
     require('../Icons/Thunder.png'),
   ];
-
-  const playerImages = {
-    Albino: require('../assets/gifs/albinoSwimming.gif'),
-    Pimentinha: require('../assets/gifs/pimentinhaSwimming.gif'),
-    Uranio: require('../assets/gifs/uranioSwimming.gif'),
-  };
-
+  
   // Função para gerar obstáculos
   const generateObstacle = () => {
     if (obstacles.length < 7) {
@@ -70,13 +65,27 @@ const nativeGame: React.FC = () => {
   useEffect(() => {
     // Recuperar a cor do jogador
     const fetchPlayerColor = async () => {
-      const storedColor = await AsyncStorage.getItem('axolotColor');
-      console.log("player color:", storedColor)
-      if (storedColor) setPlayerColor(storedColor as 'Albino' | 'Pimentinha' | 'Uranio');
+      try {
+        const storedColor = await AsyncStorage.getItem('axolotColor');
+
+        if (storedColor !== null) {
+          const selectedColor = Axogotchis.find((axolot) => axolot.color.toString() === storedColor);
+          if (selectedColor) {
+            setPlayerColor(selectedColor);
+            console.log(`Player color set to: ${selectedColor.color}`);
+          } else {
+            console.log('No matching color found, defaulting to Albino');
+            setPlayerColor(Axogotchis[0]); // Cor padrão
+          }
+        } 
+      } catch (error) {
+        console.log('Error fetching player color:', error);
+        setPlayerColor(Axogotchis[0]); // Cor padrão
+      }
     };
+
     fetchPlayerColor();
 
-    // Iniciar giroscópio
     Gyroscope.setUpdateInterval(70);
     const subscription = Gyroscope.addListener((data) => setGyroscopeData(data));
 
@@ -111,10 +120,10 @@ const nativeGame: React.FC = () => {
 
         if (updatedObstacles.length < prevObstacles.length) {
           setScorePoints((prevScorePoints) => {
-            const newScorePoints = prevScorePoints + 50;
-            if (newScorePoints % 100 === 0) {
-              setObstacleSpeed((prevSpeed) => Math.min(30, prevSpeed + 1));
-              setObstacleInterval((prevInterval) => Math.max(800, prevInterval - 100));
+            const newScorePoints = prevScorePoints + 20;
+            if (newScorePoints % 80 === 0) {
+              setObstacleSpeed((prevSpeed) => Math.min(30, prevSpeed + 2));
+              setObstacleInterval((prevInterval) => Math.max(700, prevInterval - 150));
             }
             return newScorePoints;
           });
@@ -128,51 +137,56 @@ const nativeGame: React.FC = () => {
   const togglePause = () => setIsPaused((prev) => !prev);
 
   // Verificar colisão
-  useEffect(() => {
-    if (!isGameOver) {
-      setObstacles((prevObstacles) => {
-        let collisionDetected = false;
+useEffect(() => {
+  if (!isGameOver) {
+    setObstacles((prevObstacles) => {
+      let collisionDetected = false;
 
-        const playerBounds = {
-          left: position.x,
-          right: position.x + 100,
-          top: position.y,
-          bottom: position.y + 40, // ajustado para a altura do jogador
+      const playerBounds = {
+        left: position.x,
+        right: position.x + 100,
+        top: position.y,
+        bottom: position.y + 40, // ajustado para a altura do jogador
+      };
+
+      const updatedObstacles = prevObstacles.filter((obstacle) => {
+        const obstacleBounds = {
+          left: obstacle.x,
+          right: obstacle.x + obstacle.width,
+          top: obstacle.y,
+          bottom: obstacle.y + obstacle.height,
         };
 
-        const updatedObstacles = prevObstacles.filter((obstacle) => {
-          const obstacleBounds = {
-            left: obstacle.x,
-            right: obstacle.x + obstacle.width,
-            top: obstacle.y,
-            bottom: obstacle.y + obstacle.height,
-          };
+        const isCollision =
+          playerBounds.right > obstacleBounds.left &&
+          playerBounds.left < obstacleBounds.right &&
+          playerBounds.bottom > obstacleBounds.top &&
+          playerBounds.top < obstacleBounds.bottom;
 
-          const isCollision =
-            playerBounds.right > obstacleBounds.left &&
-            playerBounds.left < obstacleBounds.right &&
-            playerBounds.bottom > obstacleBounds.top &&
-            playerBounds.top < obstacleBounds.bottom;
-
-          if (isCollision) {
-            collisionDetected = true;
-            if (lives > 0) setLives((prevLives) => prevLives - 1);
-            return false;
-          }
-          return true;
-        });
-
-        if (collisionDetected && lives <= 0) setIsGameOver(true);
-
-        return updatedObstacles;
+        if (isCollision) {
+          collisionDetected = true;
+          return false; // Remove o obstáculo após a colisão
+        }
+        return true;
       });
-    }
-  }, [position, isGameOver, lives]);
+
+      if (collisionDetected) {
+        if (lives > 1) {
+          setLives((prevLives) => prevLives - 1);
+        } else {
+          setIsGameOver(true); // Define game over se não há mais vidas
+        }
+      }
+
+      return updatedObstacles;
+    });
+  }
+}, [position, isGameOver, lives]);
 
   // Reiniciar o jogo
   const resetGame = () => {
     setPosition({ x: width / 2, y: height - 100 });
-    setLives(3);
+    setLives(5);
     setObstacles([]);
     setIsGameOver(false);
     setScorePoints(0);
@@ -187,10 +201,10 @@ const nativeGame: React.FC = () => {
       <View style={styles.container}>
         {!isGameOver ? (
           <>
-            {/* Mostrar a imagem do jogador com base na cor */}
+            {/* Mostrar a imagem do jogador com base na cor */} 
             {playerColor && (
               <Image
-                source={playerImages[playerColor]}
+                source={playerColor.swimming}
                 style={[styles.player, { left: position.x, top: position.y }]}
               />
             )}
@@ -234,6 +248,7 @@ const nativeGame: React.FC = () => {
     </ImageBackground>
   );
 };
+
 
 // Estilos
 const styles = StyleSheet.create({

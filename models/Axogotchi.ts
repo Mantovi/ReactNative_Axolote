@@ -1,9 +1,13 @@
-import { Image, ImageBackground, ImageBackgroundProps, ImageSourcePropType } from "react-native";
+import { ImageBackgroundProps } from "react-native";
 
 export type Axogotchi = {
     id: number,
     name: string,
-    color: number
+    color: number,
+    hunger: number,
+    sleep: number,
+    fun: number,
+    lastUpdate: Date,
 };
 
 // Mapeamento das imagens para cada cor

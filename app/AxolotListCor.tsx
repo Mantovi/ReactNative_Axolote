@@ -6,6 +6,7 @@ import AxolotInitial from '../components/AxolotInitial'; // Atualize o caminho c
 import useAxolotchiDatabase from './database/useAxolotchiDatabase';
 import { Axogotchis } from '@/mock/Axolotchis';
 import AxolotCor from '@/components/AxolotCor';
+import AxolotItem from '@/components/AxolotItem';
 
 const AxolotListCor = () => {
     const [selectedColor, setSelectedColor] = useState<number>(0);
@@ -33,6 +34,7 @@ const AxolotListCor = () => {
                 style={styles.backgroundImagem}
                 resizeMode="cover"
             >
+
                 <View style={styles.colorContainer}>
                     {Axogotchis.map((axogotchi, index) => (
                         <TouchableOpacity
@@ -43,9 +45,9 @@ const AxolotListCor = () => {
                             ]}
                             onPress={() => handleColorSelect(index)}
                         >
-                            <AxolotCor
+                            <AxolotItem
                                 name={['Albino', 'Pimentinha', 'Urânio'][index]}
-                                image={axogotchi.sleepingStatic} // Utilize a imagem estática
+                                image={axogotchi.sleepingStatic}
                                 onPress={() => handleColorSelect(index)}
                             />
                         </TouchableOpacity>
@@ -56,10 +58,19 @@ const AxolotListCor = () => {
                     placeholder="Digite o nome"
                     value={name}
                     onChangeText={setName}
+                    maxLength={8}
                 />
-                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Confirmar</Text>
-                </TouchableOpacity>
+
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                        <Text style={styles.buttonText}>Confirmar</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.button} onPress={router.back}>
+                        <Text style={styles.buttonText}>Voltar</Text>
+                    </TouchableOpacity>
+                </View>
+
             </ImageBackground>
         </SafeAreaView>
     );
@@ -84,9 +95,9 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     selectedColorItem: {
-        borderColor: '#FFD700',
-        borderWidth: 2,
-        borderRadius: 10,
+        borderColor: '#00FFA1',
+        borderWidth: 5,
+        borderRadius: 30,
     },
     colorText: {
         fontFamily: 'PressStart2P',
@@ -99,11 +110,16 @@ const styles = StyleSheet.create({
         padding: 10,
         borderColor: '#000',
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 10,
         marginBottom: 20,
         backgroundColor: '#fff',
         fontFamily: 'PressStart2P',
         fontSize: 18,
+    },
+    buttonContainer: {
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        marginTop: 20,
     },
     button: {
         backgroundColor: '#F5C7A9',
@@ -116,10 +132,14 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     buttonText: {
-        color: '#000',
-        fontSize: 18,
+        color: '#c9c9c9',
+        fontSize: 16,
         fontFamily: 'PressStart2P',
-    },
+        textShadowColor: '#000',
+        textShadowOffset: { width: 2, height: 2 },
+        textShadowRadius: 1,
+        textAlign: 'center',
+    }
 });
 
 export default AxolotListCor;
